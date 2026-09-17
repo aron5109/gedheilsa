@@ -1,0 +1,25 @@
+import { redirect } from 'next/navigation';
+import { configured, userClient } from '@/lib/supabase/server';
+import { loadData } from '@/lib/server/data';
+import { emailReady } from '@/lib/server/mail';
+import { AppShell } from '@/components/app-shell';
+export const dynamic = 'force-dynamic';
+export default async function AppPage() {
+  if (!configured()) redirect('/?uppsetning=1');
+  const db = await userClient();
+  const { data, error } = await db.auth.getUser();
+  if (error || !data.user) redirect('/');
+  const initialData = await loadData(db, data.user.id);
+  return (
+    <AppShell
+      initialData={initialData}
+      owner={data.user.id}
+      emailReady={emailReady()}
+      pushReady={Boolean(
+        process.env.VAPID_PRIVATE_KEY &&
+        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY &&
+        process.env.CRON_SECRET,
+      )}
+    />
+  );
+}

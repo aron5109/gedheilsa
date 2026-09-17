@@ -1,0 +1,24 @@
+name: Villutilkynning
+description: Tilkynna villu án persónu- eða heilsuupplýsinga.
+title: '[Villa] '
+body:
+  - type: markdown
+    attributes:
+      value: 'Ekki setja heilsufarsupplýsingar, netföng, aðgangslykla eða skjáskot af raunverulegum notendum í opin GitHub-mál.'
+  - type: textarea
+    id: steps
+    attributes:
+      label: Hvernig má endurtaka villuna?
+      description: Notaðu tilbúin prófunargögn.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Hvað átti að gerast?
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Vafri, stýrikerfi og útgáfa apps
