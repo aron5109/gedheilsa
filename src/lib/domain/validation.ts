@@ -45,6 +45,7 @@ export const profileSchema = z
     interests: z.array(z.string().trim().min(1).max(80)).max(20),
     comfort_activities: z.array(z.string().trim().min(1).max(160)).max(20),
     water_goal_ml: z.number().int().min(250).max(6000),
+    personal_notifications: z.boolean().default(false),
     support_enabled: z.boolean(),
     support_days: z.number().int().min(3).max(14),
     health_consent: z.literal(true),

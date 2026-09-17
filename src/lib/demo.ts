@@ -30,6 +30,7 @@ export function demoData(): AppData {
       interests: ['Tónlist', 'Göngutúrar', 'Náttúran'],
       comfort_activities: ['Hlusta á uppáhaldslagið mitt'],
       water_goal_ml: 1500,
+      personal_notifications: false,
       support_enabled: false,
       support_days: 3,
       consent_at: null,

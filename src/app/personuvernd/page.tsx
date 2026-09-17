@@ -6,7 +6,7 @@ export default function Privacy() {
       <Link href="/">
         <Brand />
       </Link>
-      <span className="eyebrow">SKÝRT OG Á MANNAMEÐLI</span>
+      <span className="eyebrow">SKÝRT OG Á MANNAMÁLI</span>
       <h1>Þín gögn. Þín ákvörðun.</h1>
       <p className="lead">
         Hlýja er í þróun. Þetta yfirlit lýsir því hvernig þessi útgáfa meðhöndlar gögn.
@@ -33,6 +33,13 @@ export default function Privacy() {
         Samliggjandi dagar þurfa raunverulegar skráningar; skráningarleysi er ekki túlkað sem
         vanlíðan. Send er almenn beiðni um samband með nafni þínu, en hvorki mæligildi, lyf né
         dagbókartexti. Þú getur slökkt á þessu og viðtakandi getur afþakkað frekari skilaboð.
+      </p>
+      <h2>Hvað birtist í tilkynningum?</h2>
+      <p>
+        Tilkynningar eru almennar þar til þú velur persónulega kveðju í Mitt rými. Ef þú virkjar
+        hana geta fornafnið þitt og almenn áminning um líðan, vatn eða svefn birst á læsiskjánum.
+        Skráð líðan, dagbókartexti, lyfjaheiti og upplýsingar um læknistíma eru ekki send í
+        tilkynningum. Þú getur slökkt á persónulegum kveðjum eða stöðvað tilkynningar á tækinu.
       </p>
       <h2>Hvað ef samband rofnar?</h2>
       <p>

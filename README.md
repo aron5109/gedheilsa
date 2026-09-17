@@ -36,6 +36,12 @@ Opnaðu `http://localhost:3000/demo` fyrir gagnvirkt sýnishorn með tilbúnum f
 | Varðveisla       | PostgreSQL + RLS, óbreytanlegar mælingar, UUID, endursending án tvískráningar og valkvæð IndexedDB-biðgeymsla |
 | Prófanir         | TypeScript, ESLint, Vitest, raunveruleg PostgreSQL/RLS-próf í PGlite, Playwright og axe                       |
 
+## Málfar og símaútlit
+
+Skapsvalið er aðalatriði forsíðunnar, með stórum snertiflötum í síma. Daglega birtast ný **orð dagsins** úr banka með 31 frumsömdum texta og **fróðleiksmoli** úr 12 heimildastuddum textum. Persónulegar tilkynningar eru valkvæðar og hafa forskoðun í Mitt rými.
+
+[Textastefna, heimildir og aðgengisviðmið](docs/MALFAR-OG-ADGENGI.md). Nýja SQL-breytingin `202609180002_personal_notifications.sql` þarf að vera komin inn áður en þessi útgáfa er sett í notkun.
+
 ## Tæknigrunnur
 
 Next.js App Router · React · TypeScript · Supabase PostgreSQL/Auth · Zod · Web Push · Resend. Enginn greiningar- eða auglýsingarekjakóði. Engin LLM-þjónusta fær notendagögn; persónulegar hugmyndir eru valdar með einfaldri, gagnsærri rökfræði.
@@ -55,7 +61,7 @@ docs/                    Uppsetning, arkitektúr, rekstur og áframhald
 ```bash
 npm run check
 npm run format:check
-npx playwright install chromium
+npx playwright install chromium webkit
 npm run test:e2e
 ```
 

@@ -1,7 +1,7 @@
 'use client';
-import { formatDate, formatNumber } from '@/lib/domain/format';
+import { formatDate, formatNumber, registrationCount, isSingular } from '@/lib/domain/format';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Home,
   ChartNoAxesCombined,
@@ -25,6 +25,9 @@ import {
 } from 'lucide-react';
 import type { AppData, MoodScore, WellbeingEntry, Profile } from '@/lib/domain/types';
 import { MOODS, dayKey, addDays, suggestions } from '@/lib/domain/mood';
+import { dailyContent, FACT_SOURCES } from '@/lib/domain/daily-content';
+import type { AppAction } from '@/lib/domain/notifications';
+import { useLocalDay } from './use-local-day';
 import { api, setStorageConsent } from '@/lib/client';
 import { useHlyja } from './use-hlyja';
 import { Brand, Face, HelpCard, Modal } from './ui';
@@ -43,12 +46,16 @@ const navigation = [
 ];
 export function AppShell({
   initialData,
+  initialNow,
+  initialAction,
   owner,
   demo = false,
   emailReady = false,
   pushReady = false,
 }: {
   initialData: AppData;
+  initialNow: string;
+  initialAction?: AppAction;
   owner: string;
   demo?: boolean;
   emailReady?: boolean;
@@ -59,12 +66,19 @@ export function AppShell({
     owner,
     demo,
   );
-  const [page, setPage] = useState<Page>('today'),
-    [mood, setMood] = useState<{ score?: MoodScore } | null>(null),
-    [wellbeing, setWellbeing] = useState<WellbeingEntry['kind'] | null>(null),
+  const [page, setPage] = useState<Page>(initialAction === 'reminders' ? 'reminders' : 'today'),
+    [mood, setMood] = useState<{ score?: MoodScore } | null>(initialAction === 'mood' ? {} : null),
+    [wellbeing, setWellbeing] = useState<WellbeingEntry['kind'] | null>(
+      initialAction === 'water' || initialAction === 'sleep' ? initialAction : null,
+    ),
     [share, setShare] = useState(false),
     [activity, setActivity] = useState<{ title: string; description: string } | null>(null);
+  const mainRef = useRef<HTMLElement>(null);
   const profile = data.profile;
+  const today = useLocalDay(profile?.timezone ?? 'Atlantic/Reykjavik', initialNow);
+  const dailyContentForToday = dailyContent(today);
+  const fact = dailyContentForToday.fact;
+  const factSource = FACT_SOURCES[fact.source];
   if (!profile)
     return (
       <Onboarding
@@ -84,7 +98,6 @@ export function AppShell({
       />
     );
   const timezone = profile.timezone;
-  const today = dayKey(new Date(), timezone);
   const todaysMoods = data.moods.filter((m) => dayKey(m.occurred_at, timezone) === today);
   const sorted = data.moods.slice().sort((a, b) => b.occurred_at.localeCompare(a.occurred_at));
   const latest = sorted[0];
@@ -107,6 +120,7 @@ export function AppShell({
   function navigate(next: Page) {
     setPage(next);
     window.scrollTo({ top: 0, behavior: 'instant' });
+    mainRef.current?.focus({ preventScroll: true });
   }
   return (
     <div className="app-layout">
@@ -205,13 +219,12 @@ export function AppShell({
             </button>
           </div>
         </header>
-        <main id="main-content" className="main-content">
+        <main id="main-content" className="main-content" ref={mainRef} tabIndex={-1}>
           {demo && (
             <div className="demo-banner">
               <span>
                 <Sparkles size={15} />
-                <strong>Sýnishorn</strong> · Tilbúnar færslur. Breytingar hverfa þegar síðan er
-                endurhlaðin.
+                <strong>Sýnishorn</strong> · Tilbúnar færslur. Breytingar vistast ekki.
               </span>
               <Link href="/">
                 Um Hlýju <ArrowUpRight size={14} />
@@ -222,9 +235,9 @@ export function AppShell({
             <div className="queue-banner" role="status">
               <CloudUpload size={18} />
               <span>
-                {queue.length} {queue.length === 1 ? 'færsla bíður' : 'færslur bíða'} sendingar á
-                þessu tæki.{syncError ? ' ' + syncError : ''} Ekki hreinsa vafragögn meðan færslur
-                bíða.
+                {queue.length} {isSingular(queue.length) ? 'færsla bíður' : 'færslur bíða'}{' '}
+                sendingar á þessu tæki.{syncError ? ' ' + syncError : ''} Ekki hreinsa vafragögn
+                meðan færslur bíða.
               </span>
               <button className="text-button" disabled={syncing} onClick={() => void sync()}>
                 Reyna aftur
@@ -235,43 +248,48 @@ export function AppShell({
             <>
               <div className="section-heading dashboard-heading">
                 <div>
-                  <span className="eyebrow">ÞETTA ER ÞINN DAGUR</span>
+                  <span className="eyebrow">GOTT AÐ ÞÚ SÉRT HÉR</span>
                   <h1>Gott að sjá þig, {profile.name}.</h1>
-                  <p className="muted">Gefðu þér augnablik. Hvernig hefurðu það?</p>
+                  <p className="muted">Tökum daginn á þínum hraða.</p>
                 </div>
                 <span className="date-label">
-                  {formatDate(new Date(), timezone, { weekday: true })}
+                  {formatDate(today + 'T12:00:00Z', 'UTC', { weekday: true })}
                 </span>
               </div>
               <div className="dashboard-grid">
                 <div className="dashboard-primary">
-                  <section className="card mood-card">
+                  <section className="card mood-card" aria-labelledby="daily-mood-title">
                     <div className="card-heading">
-                      <span className="eyebrow">STÖLDRAÐU AÐEINS VIÐ</span>
+                      <span className="eyebrow">STALDRAÐU AÐEINS VIÐ</span>
                       <span className="small muted">
                         {todaysMoods.length
-                          ? `${todaysMoods.length} skráningar í dag`
+                          ? `${registrationCount(todaysMoods.length)} í dag`
                           : 'Þín stund'}
                       </span>
                     </div>
-                    <h2>Hvernig líður þér núna?</h2>
-                    <p className="muted">Það er ekkert rétt eða rangt svar.</p>
+                    <h2 id="daily-mood-title">Hvernig líður þér núna?</h2>
+                    <p className="muted">Öll líðan á hér heima.</p>
                     <div className="mood-options dashboard-moods">
                       {MOODS.map((m) => (
                         <button
                           className="mood-option"
                           key={m.score}
-                          onClick={() => setMood({ score: m.score })}
+                          aria-haspopup="dialog"
+                          onClick={(event) => {
+                            event.currentTarget.focus({ preventScroll: true });
+                            setMood({ score: m.score });
+                          }}
                         >
-                          <Face score={m.score} size={60} />
+                          <Face score={m.score} size={76} />
                           <span>{m.label}</span>
+                          <ChevronRight className="mood-chevron" size={18} aria-hidden="true" />
                         </button>
                       ))}
                     </div>
                     <div className="mood-card-footer">
                       <span>
                         <ShieldCheck size={14} />
-                        Bara fyrir þig
+                        Þú ræður hvað þú deilir
                       </span>
                       <button className="text-button" onClick={() => setMood({})}>
                         Skrá líðan <Plus size={16} />
@@ -283,7 +301,7 @@ export function AppShell({
                       <div>
                         <h2>Líðan síðustu daga</h2>
                         <p className="muted small">
-                          Síðustu sjö dagar · {weekEntries.length} skráningar
+                          Síðustu sjö dagar · {registrationCount(weekEntries.length)}
                         </p>
                       </div>
                       <button
@@ -302,7 +320,7 @@ export function AppShell({
                           <span className="muted small">af 5 að meðaltali</span>
                         </>
                       ) : (
-                        <p className="muted">Fyrsta skráningin þín byrjar yfirlitið.</p>
+                        <p className="muted">Hér birtist yfirlit þegar þú hefur skráð líðan.</p>
                       )}
                     </div>
                     <MoodChart
@@ -346,17 +364,13 @@ export function AppShell({
                         />
                       </svg>
                     </div>
-                    <span className="eyebrow">LÍTIL ÁMINNING</span>
-                    <h2>
-                      Þú mátt taka
-                      <br />
-                      þetta rólega.
-                    </h2>
-                    <p>
-                      Sumir dagar þurfa meiri mýkt.
-                      <br />
-                      Það er líka hluti af því að hlúa að sér.
-                    </p>
+                    <span className="eyebrow" id="daily-words-title">
+                      ORÐ DAGSINS
+                    </span>
+                    <blockquote aria-labelledby="daily-words-title">
+                      {dailyContentForToday.words}
+                    </blockquote>
+                    <p className="daily-words-credit">Hlýja · Ein hugsun fyrir daginn</p>
                     <button
                       className="gentle-link"
                       onClick={() =>
@@ -369,6 +383,21 @@ export function AppShell({
                     >
                       Gefðu þér smá stund <ArrowUpRight size={16} />
                     </button>
+                  </section>
+                  <section className="card daily-fact" aria-labelledby="daily-fact-title">
+                    <span className="eyebrow">GOTT AÐ VITA</span>
+                    <h2 id="daily-fact-title">{fact.title}</h2>
+                    <p>{fact.text}</p>
+                    <p className="muted">{fact.invitation}</p>
+                    <a
+                      className="fact-source"
+                      href={factSource.url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Heimild: {factSource.label} <span>(á ensku)</span>
+                      <ArrowUpRight size={15} aria-hidden="true" />
+                    </a>
                   </section>
                   <section className="card daily-reminder">
                     <div className="card-heading">
@@ -430,7 +459,7 @@ export function AppShell({
                     <small> ml</small>
                   </strong>
                   <span className="muted small">
-                    af þínu {formatNumber(profile.water_goal_ml, 0)} ml markmiði
+                    þitt markmið: {formatNumber(profile.water_goal_ml, 0)} ml
                   </span>
                   <div className="water-progress" aria-hidden="true">
                     {Array.from({ length: 8 }, (_, i) => (
@@ -457,7 +486,7 @@ export function AppShell({
                   </strong>
                   <span className="muted small">
                     {sleep !== undefined
-                      ? 'Síðast skráði svefn dagsins'
+                      ? 'Nýjasta svefnskráning dagsins'
                       : 'Hvernig svafstu síðustu nótt?'}
                   </span>
                   <div className="sleep-wave" aria-hidden="true">
@@ -495,7 +524,7 @@ export function AppShell({
               <div className="subsection-heading">
                 <div>
                   <h2>Eitthvað sem gæti gert þér gott.</h2>
-                  <p className="muted small">Hugmyndir út frá því sem þú hefur sagt okkur.</p>
+                  <p className="muted small">Hugmyndir út frá því sem þér finnst gott að gera.</p>
                 </div>
                 <span className="personalized-label">
                   <Sparkles size={14} />

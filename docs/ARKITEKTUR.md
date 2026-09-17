@@ -27,6 +27,8 @@ Aðstandandi fær bara nafn notandans og beiðni um samband. Notandi þarf að v
 
 ## Áminningar
 
+`profiles.personal_notifications` er sjálfgefið `false`. Við sendingu er núverandi val lesið og kveðja mynduð með fornafni ef notandi hefur virkjað hana. Hvorki skráð líðan, dagbókartexti né lyfjaheiti fara í Web Push. Service worker birtir textann úr sendingunni og leyfir aðeins fyrirfram ákveðnar `/app`-slóðir. Hann endurhleður ekki annan opinn glugga með ókláruðu eyðublaði.
+
 Scheduler gengur yfir raunverulegar mínútur í síðasta tíu mínútna glugga og ber saman staðartíma. Þannig er ekki gert ráð fyrir að allir almanaksdagar séu nákvæmlega 24 tímar. Tvítekin klukkustund við vetrartíma fær sama occurrence-auðkenni og er ekki send tvisvar.
 
 - Daglegar áminningar: routine ID + staðbundin dagsetning + HH:mm.
@@ -48,3 +50,7 @@ iCalendar: stöðugt UID, UTC, línubrotsvörn, UTF-8 línafelling, `CLASS:PRIVA
 ## Afmörkun fyrstu útgáfu
 
 Engin LLM vinnsla, engin sjúkdómsgreining, engar skammtaráðleggingar, engin samþykkt frá aðstandanda án athafnar hans, enginn skrefainnflutningur úr heilsukerfum enn. Hugbúnaðurinn er ætlaður fullorðnum í þessari útgáfu. Engin ábyrgð á 24/7 vöktun er gefin.
+
+## Daglegt efni
+
+31 frumsaminn íslenskur texti og 12 heimildastuddir fróðleiksmolar eru í `src/lib/domain/daily-content.ts`. Valið byggir á almanaksdegi í tímabelti notandans, er stöðugt við endurhleðslu og endurnýjast við dagaskipti eða þegar komið er aftur í appið. Engin skráð líðan fer til ytri efnisþjónustu. Sjá [málfar og aðgengi](MALFAR-OG-ADGENGI.md).

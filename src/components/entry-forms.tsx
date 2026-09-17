@@ -49,14 +49,16 @@ export function MoodForm({
   }
   return (
     <Modal
-      title={done ? 'Takk fyrir að staldra við.' : 'Hvernig líður þér núna?'}
+      title={done ? 'Takk fyrir að gefa þér stund.' : 'Hvernig líður þér núna?'}
       onClose={onClose}
     >
       {done ? (
         <div className="entry-success">
           <Face score={score ?? 3} size={90} />
-          <h3>Þú gafst þér smá stund.</h3>
-          <p>Færslan hefur verið móttekin í appinu. Vistunarstaðan er sýnileg efst á síðunni.</p>
+          <h3>Líðanin þín skiptir máli.</h3>
+          <p>
+            Færslan er komin í yfirlitið þitt. Efst sérðu hvort hún er vistuð eða bíður sendingar.
+          </p>
           {score && score <= 2 && <HelpCard compact />}
           <button className="button" onClick={onClose}>
             Til baka í daginn <ArrowRight size={16} />
@@ -84,7 +86,7 @@ export function MoodForm({
           </fieldset>
           <fieldset>
             <legend>
-              Hvaða tilfinningar eru til staðar? <span className="optional">(valkvætt)</span>
+              Hvaða tilfinningar finnurðu fyrir? <span className="optional">(valkvætt)</span>
             </legend>
             <div className="chips">
               {EMOTIONS.map((item) => (
@@ -145,8 +147,8 @@ export function MoodForm({
             <div className="inline-support">
               <Heart size={18} />
               <p>
-                Þú þarft ekki að vera ein/n með þetta. <a href="tel:1717">1717</a> er til staðar
-                fyrir samtal. Í bráðri hættu: <a href="tel:112">112</a>.
+                Þú þarft ekki að takast á við þetta á eigin spýtur. <a href="tel:1717">1717</a> er
+                til staðar fyrir samtal. Í bráðri hættu: <a href="tel:112">112</a>.
               </p>
             </div>
           )}

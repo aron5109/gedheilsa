@@ -1,5 +1,5 @@
 import { PGlite } from '@electric-sql/pglite';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { beforeAll, afterAll, describe, it, expect } from 'vitest';
 const db = new PGlite();
 const alice = '00000000-0000-4000-8000-000000000001',
@@ -13,11 +13,15 @@ beforeAll(async () => {
   await db.exec(
     `create schema auth;create schema extensions;create role anon;create role authenticated;create role service_role bypassrls;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;grant usage on schema public,auth to authenticated,anon,service_role;grant execute on function auth.uid() to authenticated;`,
   );
-  const sql = readFileSync('supabase/migrations/202609180001_initial.sql', 'utf8').replace(
-    'create extension if not exists pgcrypto with schema extensions;',
-    '',
-  );
-  await db.exec(sql);
+  for (const file of readdirSync('supabase/migrations')
+    .filter((name) => name.endsWith('.sql'))
+    .sort()) {
+    const sql = readFileSync(`supabase/migrations/${file}`, 'utf8').replace(
+      'create extension if not exists pgcrypto with schema extensions;',
+      '',
+    );
+    await db.exec(sql);
+  }
   await db.exec(
     `insert into auth.users(id) values('${alice}'),('${bob}');insert into public.profiles(id,name,health_consent_at) values('${alice}','A',now()),('${bob}','B',now());insert into public.mood_entries(id,user_id,score,energy,occurred_at) values('10000000-0000-4000-8000-000000000001','${alice}',2,2,now()),('10000000-0000-4000-8000-000000000002','${bob}',4,4,now());insert into public.routines(id,user_id,title,kind,times) values('30000000-0000-4000-8000-000000000002','${bob}','B lyf','medication',array['08:00']);insert into public.trusted_contacts(id,user_id,name,email) values('40000000-0000-4000-8000-000000000001','${alice}','Vinur','test@example.invalid');`,
   );
@@ -26,6 +30,25 @@ afterAll(async () => {
   await db.close();
 });
 describe('database access boundaries (real PostgreSQL engine)', () => {
+  it('keeps personal lock-screen messages off until the owner opts in', async () => {
+    await asUser(alice);
+    const before = await db.query<{ personal_notifications: boolean }>(
+      'select personal_notifications from public.profiles',
+    );
+    expect(before.rows).toEqual([{ personal_notifications: false }]);
+    await db.exec(`update public.profiles set personal_notifications=true where id='${bob}'`);
+    await asUser(bob);
+    const other = await db.query<{ personal_notifications: boolean }>(
+      'select personal_notifications from public.profiles',
+    );
+    expect(other.rows).toEqual([{ personal_notifications: false }]);
+    await asUser(alice);
+    await db.exec('update public.profiles set personal_notifications=true');
+    const after = await db.query<{ personal_notifications: boolean }>(
+      'select personal_notifications from public.profiles',
+    );
+    expect(after.rows).toEqual([{ personal_notifications: true }]);
+  });
   it('enables RLS on every public table', async () => {
     await db.exec('reset role');
     const result = await db.query<{ relname: string; relrowsecurity: boolean }>(

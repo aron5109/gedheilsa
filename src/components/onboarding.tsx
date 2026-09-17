@@ -44,6 +44,7 @@ export function Onboarding({
                 .filter(Boolean)
             : [],
           water_goal_ml: 1500,
+          personal_notifications: false,
           support_enabled: false,
           support_days: 3,
           health_consent: consent,
@@ -74,9 +75,7 @@ export function Onboarding({
           {step === 0 ? <Leaf /> : step === 1 ? <Sparkles /> : <ShieldCheck />}
         </div>
         <span className="eyebrow">SMÁ KYNNING, Á ÞÍNUM FORSENDUM</span>
-        <h1>
-          {['Velkomin í þitt rými.', 'Hvað gerir þér gott?', 'Þú stjórnar þínum gögnum.'][step]}
-        </h1>
+        <h1>{['Gott að þú sért hér.', 'Hvað gerir þér gott?', 'Þín gögn. Þín ákvörðun.'][step]}</h1>
         <p className="lead">
           {
             [

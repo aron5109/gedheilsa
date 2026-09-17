@@ -66,11 +66,13 @@ test('mobile layout fits and navigation is keyboard accessible', async ({ page }
 test('dashboard and mood dialog satisfy automated accessibility checks', async ({ page }) => {
   await page.goto('/demo');
   let results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
     .analyze();
   expect(results.violations).toEqual([]);
   await page.getByRole('button', { name: 'Mjög illa', exact: true }).click();
-  results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+    .analyze();
   expect(results.violations).toEqual([]);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).toHaveCount(0);
@@ -106,4 +108,93 @@ test('new user answers Icelandic onboarding and sees a personalized suggestion',
     page.getByRole('heading', { name: 'Ganga með hundinum', exact: true }),
   ).toBeVisible();
   await expect(page.locator('.chart-date').first()).toHaveText(/^(sun|mán|þri|mið|fim|fös|lau)\.$/);
+});
+
+test('daily words stay stable on reload and change when the local day changes', async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date('2026-09-17T23:59:30Z') });
+  await page.goto('/demo');
+  await expect(page.locator('.date-label')).toContainText('17. september');
+  const quote = page.locator('.gentle-card blockquote');
+  const text = await quote.innerText();
+  await page.reload();
+  await expect(page.locator('.date-label')).toContainText('17. september');
+  await expect(quote).toHaveText(text);
+  await page.clock.fastForward(60000);
+  await expect(quote).not.toHaveText(text);
+  await expect(page.locator('.fact-source')).toHaveAttribute(
+    'href',
+    /^https:\/\/(www\.)?(cdc\.gov|nhlbi\.nih\.gov|who\.int)\//,
+  );
+});
+
+test('personal reminders can be previewed, enabled and revoked', async ({ page }) => {
+  await page.goto('/demo');
+  await page
+    .getByRole('navigation', { name: 'Aðalvalmynd' })
+    .getByRole('button', { name: 'Mitt rými', exact: true })
+    .click();
+  const preview = page.getByLabel('Dæmi um tilkynningu');
+  await expect(preview).not.toContainText('Alex');
+  await page.getByLabel('Persónulegar tilkynningar með fornafninu mínu').check();
+  await expect(preview).toContainText('Hæ, Alex.');
+  await page.getByLabel('Persónulegar tilkynningar með fornafninu mínu').uncheck();
+  await expect(preview).not.toContainText('Alex');
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+    .analyze();
+  expect(results.violations).toEqual([]);
+});
+
+test('notification destinations open the intended action', async ({ page }) => {
+  await page.goto('/demo?skra=lidan');
+  await expect(page.getByRole('dialog', { name: 'Hvernig líður þér núna?' })).toBeVisible();
+  await page.goto('/demo?skra=vatn');
+  await expect(page.getByRole('dialog', { name: 'Skrá vatn' })).toBeVisible();
+  await page.goto('/demo?sida=aminningar');
+  await expect(page.getByRole('heading', { name: 'Daglegar áminningar' })).toBeVisible();
+});
+
+test('phone mood controls are primary, large and readable with enlarged text', async ({ page }) => {
+  for (const width of [320, 390, 430]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto('/demo');
+    const controls = page.locator('.dashboard-moods .mood-option');
+    await expect(controls).toHaveCount(5);
+    for (const control of await controls.all()) {
+      const box = await control.boundingBox();
+      expect(box!.height).toBeGreaterThanOrEqual(64);
+      expect(box!.width).toBeGreaterThan(220);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    const tooSmall = await page.locator('button:visible').evaluateAll((buttons) =>
+      buttons
+        .filter((button) => {
+          const box = button.getBoundingClientRect();
+          return box.width < 48 || box.height < 48;
+        })
+        .map((button) => button.textContent || button.getAttribute('aria-label')),
+    );
+    expect(tooSmall).toEqual([]);
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  const accessibility = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+    .analyze();
+  expect(accessibility.violations).toEqual([]);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = '200%';
+  });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByRole('button', { name: 'Vel', exact: true }).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(
+    page.getByRole('dialog').getByRole('button', { name: 'Vel', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Vel', exact: true })).toBeFocused();
 });

@@ -50,8 +50,13 @@ export function Modal({
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const dialog = ref.current;
+    const previousFocus =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     dialog?.showModal();
-    return () => dialog?.close();
+    return () => {
+      dialog?.close();
+      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
+    };
   }, []);
   return (
     <dialog
@@ -92,7 +97,7 @@ export function Empty({ title, children }: { title: string; children?: ReactNode
 export function HelpCard({ compact = false }: { compact?: boolean }) {
   return (
     <aside className={'help-card ' + (compact ? 'compact' : '')}>
-      <span className="eyebrow">ÞÚ ÞARFT EKKI AÐ VERA EIN/N</span>
+      <span className="eyebrow">ÞAÐ ER HJÁLP AÐ FÁ</span>
       <h3>Það er í lagi að biðja um hjálp.</h3>
       <p>
         Ef þér líður mjög illa geturðu talað við einhvern sem þú treystir eða hringt í 1717. Í

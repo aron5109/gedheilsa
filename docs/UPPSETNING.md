@@ -7,7 +7,7 @@ Node.js 24 LTS er notað í CI. Node 22 er einnig leyft. Keyrðu `npm ci`, afrit
 ## 2. Supabase og gagnagrunnur
 
 1. Stofnaðu sérstakt Supabase-prófunarverkefni. Veldu viðeigandi evrópska staðsetningu og staðfestu vinnslusamning/varðveislu áður en raunveruleg heilsugögn eru skráð.
-2. Keyrðu `supabase/migrations/202609180001_initial.sql` í SQL Editor. Alternatíft: `supabase link --project-ref <verkefni>` og `supabase db push` með Supabase CLI.
+2. Keyrðu SQL-skrárnar í `supabase/migrations/` í stafrófsröð í SQL Editor: fyrst `202609180001_initial.sql`, síðan `202609180002_personal_notifications.sql`. Ef grunnurinn er þegar uppsettur skaltu aðeins keyra nýju skrána, áður en nýja appútgáfan er sett í loftið. Að öðrum kosti: `supabase link --project-ref <verkefni>` og `supabase db push` með Supabase CLI.
 3. Settu Project URL og publishable key í `NEXT_PUBLIC_SUPABASE_URL` og `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 4. Settu service role lykilinn í `SUPABASE_SERVICE_ROLE_KEY` **aðeins á vefþjóninum**. Hann þarf fyrir staðfestingar aðstandenda, sendingarmörk, scheduler og eyðingu notanda.
 5. Notaðu eigin prófunarreikninga. Staðfestu að reikningur A sjái ekki gögn B, einnig þegar beint er kallað á Supabase Data API.
@@ -63,7 +63,7 @@ Vercel getur sent `CRON_SECRET` sjálft í Authorization þegar Vercel Cron er n
 
 Scheduler skoðar tíu mínútna glugga, stofnar einstök jobs, tekur þau með `FOR UPDATE SKIP LOCKED` og endursendir tímabundnar bilanir. Engar stórar bunur af gömlum lyfjaáminningum eru sendar eftir langt rof. Tilkynning getur komið nokkrum mínútum eftir valinn tíma; kerfið er ekki ætlað tímaháðri lyfjagjöf.
 
-Notandi virkjar tilkynningar sérstaklega í **Mitt rými**. Á iPhone er Home Screen uppsetning forsenda Web Push á studdum útgáfum. Vafrakerfi geta hindrað eða tafið tilkynningar. Prófaðu raunveruleg tæki og leyfisstillingar.
+Notandi virkjar tilkynningar sérstaklega í **Mitt rými**. Þar má einnig velja persónulegar kveðjur með fornafni og skoða dæmi áður en tilkynningar eru virkjaðar. Þessi kostur er sjálfgefið óvirkur; breyting tekur gildi við næstu sendingu. Tilkynning opnar viðeigandi skráningu eða áminningar. Á iPhone er Home Screen uppsetning forsenda Web Push á studdum útgáfum. Vafrakerfi geta hindrað eða tafið tilkynningar. Prófaðu raunveruleg tæki og leyfisstillingar.
 
 ## 7. Dagatöl og næstu tengingar
 

@@ -7,6 +7,7 @@ import { sendEmail, emailReady } from './mail';
 import { allRows } from './data';
 import { dayKey, localTime, supportSignal } from '@/lib/domain/mood';
 import { pushSchema } from '@/lib/domain/validation';
+import { reminderMessage, type ReminderKind } from '@/lib/domain/notifications';
 import type { Profile, MoodEntry, Routine, Appointment } from '@/lib/domain/types';
 type Job = {
   id: string;
@@ -202,6 +203,7 @@ export async function runScheduler(now = new Date()) {
           `support-${job.id}`,
         );
       } else {
+        let reminderKind: ReminderKind = 'appointment';
         if (job.kind === 'routine') {
           const { data: r, error: re } = await db
             .from('routines')
@@ -223,6 +225,7 @@ export async function runScheduler(now = new Date()) {
             await cancel();
             continue;
           }
+          reminderKind = r.kind;
         }
         if (job.kind === 'appointment') {
           const { data: a, error: ae } = await db
@@ -265,10 +268,8 @@ export async function runScheduler(now = new Date()) {
             await webpush.sendNotification(
               parsed.data,
               JSON.stringify({
-                title: 'Stund fyrir þig',
-                body: 'Þú átt áminningu í Hlýju.',
+                ...reminderMessage(profile as Profile, reminderKind, now),
                 tag: job.id,
-                url: '/app',
               }),
               { TTL: 1800, timeout: 10000 },
             );

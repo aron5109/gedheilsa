@@ -1,5 +1,11 @@
 'use client';
-import { formatDate, formatNumber, shortWeekday } from '@/lib/domain/format';
+import {
+  formatDate,
+  formatNumber,
+  shortWeekday,
+  registrationCount,
+  isSingular,
+} from '@/lib/domain/format';
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Download, ArrowUpRight } from 'lucide-react';
 import { MOODS, dayKey, addDays, filterMoods, dailyMoods } from '@/lib/domain/mood';
@@ -40,7 +46,7 @@ export function MoodChart({
           aria-label={days
             .map(
               (d) =>
-                `${d.date}: ${d.count ? `${d.average === null ? '—' : formatNumber(d.average)} af 5, ${d.count} skráningar` : 'engin skráning'}`,
+                `${d.date}: ${d.count ? `${d.average === null ? '—' : formatNumber(d.average)} af 5, ${registrationCount(d.count)}` : 'engin skráning'}`,
             )
             .join('. ')}
         >
@@ -169,7 +175,7 @@ export function History({
             <span className="muted small">Skráningar á tímabilinu</span>
             <strong>
               {selected.length}
-              <small> {selected.length === 1 ? 'skráning' : 'skráningar'}</small>
+              <small> {isSingular(selected.length) ? 'skráning' : 'skráningar'}</small>
             </strong>
           </div>
           <div>
