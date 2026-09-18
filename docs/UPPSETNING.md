@@ -33,6 +33,21 @@ Opinberar leiðbeiningar: [Neon Auth fyrir Next.js](https://neon.com/docs/auth/q
 
 Repo `aron5109/gedheilsa`, Next.js preset, Node 24, build `npm run build`. Þetta er ekki static-export verkefni. Neon Marketplace tengingin útvegar gagnagrunnsbreytur, en athuga þarf Auth URL, cookie secret og app-slóð sérstaklega.
 
+`vercel.json` festir Next.js preset, byggingarskipun og `.next` úttak í kóðanum svo eldri stillingar verkefnisins ráði ekki þessum gildum. **Root Directory** í Vercel á að vera rót repósins (sjálfgefið tómt), þar sem `package.json` er staðsett.
+
+### Ef bygging tekst en síðan sýnir `404 NOT_FOUND`
+
+Ef verkefnið var tengt áður en Next.js-kóðinn kom inn gæti Vercel enn verið stillt á **Other**. Þá getur `npm run build` tekist en Vercel birt aðeins skrár úr `public`, án síðna og API-aðgerða appsins. Vantar bæði `Detected Next.js version` og upplýsingar um pökkun serverless functions í heildarannálinn er það vísbending um slíka stillingu, ekki full staðfesting.
+
+1. Útgefðu nýjasta commit sem inniheldur `vercel.json`. Endurútgáfa gamals commits tekur ekki nýju skrána með.
+2. Í **Settings → Build and Deployment** skaltu staðfesta **Next.js**, `npm run build`, `.next` og rót repósins. Skráin í repóinu yfirskrifar fyrstu þrjú gildin við næstu útgáfu.
+3. Opnaðu **Visit** á nýju útgáfunni og prófaðu `/` og `/demo`. Skoðaðu **Build Output** og staðfestu að bæði síður og serverless functions séu til staðar.
+4. Ef nýja útgáfuslóðin virkar en aðallénið ekki skaltu skoða **Settings → Domains** og hvort útgáfan sé merkt **Production / Current**. Ef hvorug virkar skaltu skoða nákvæma slóð, útgáfuaðgang og runtime logs.
+
+Óstillt Neon-innskráning á ekki að valda Vercel-404 á forsíðunni: `/` og `/demo` eiga að birtast þótt þjónustulykla vanti. Viðvaranir frá npm um peer dependencies eða deprecated pakka eru heldur ekki einar og sér skýring þegar annállinn endar á `Deployment completed`.
+
+Heimildir: [byggingarstillingar Vercel](https://vercel.com/docs/builds/configure-a-build) og [404 eftir vel heppnaða útgáfu](https://vercel.com/kb/guide/why-is-my-deployed-project-giving-404).
+
 Nauðsynlegar breytur fyrir innskráningu: `DATABASE_URL`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_COOKIE_SECRET`, `NEXT_PUBLIC_APP_URL`. Migration þarf einnig `DATABASE_URL_UNPOOLED`. Stilltu hverja breytu fyrir rétt umhverfi og endurútgefðu eftir breytingar. Preview á að nota sérstaka Neon-grein og samsvarandi Auth URL.
 
 GitHub-tengingin getur útgefið kóðann sjálfkrafa, en útgáfa ein og sér staðfestir ekki gagnagrunn, Google-innskráningu eða tilkynningar. Óstillt innskráning birtir uppsetningarskilaboð og `/demo` helst aðgengilegt.
