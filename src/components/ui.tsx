@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { X, Heart, ArrowUpRight } from 'lucide-react';
 import { MOODS } from '@/lib/domain/mood';
 export function Brand({ small = false }: { small?: boolean }) {
@@ -41,40 +41,95 @@ export function Modal({
   children,
   onClose,
   wide = false,
+  dirty = false,
+  busy = false,
 }: {
   title: string;
   children: ReactNode;
   onClose: () => void;
   wide?: boolean;
+  dirty?: boolean;
+  busy?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+  const [confirmClose, setConfirmClose] = useState(false);
+  const continueRef = useRef<HTMLButtonElement>(null);
+  const fieldRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     const dialog = ref.current;
     const previousFocus =
       document.activeElement instanceof HTMLElement ? document.activeElement : null;
     dialog?.showModal();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     return () => {
       dialog?.close();
+      document.body.style.overflow = previousOverflow;
       if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };
   }, []);
+  useEffect(() => {
+    if (confirmClose) continueRef.current?.focus();
+  }, [confirmClose]);
+  useEffect(() => {
+    if (!dirty) return;
+    const protectDraft = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', protectDraft);
+    return () => window.removeEventListener('beforeunload', protectDraft);
+  }, [dirty]);
+  function requestClose() {
+    if (busy) return;
+    if (!dirty) return onClose();
+    fieldRef.current = document.activeElement as HTMLElement | null;
+    setConfirmClose(true);
+  }
+  function continueEditing() {
+    setConfirmClose(false);
+    requestAnimationFrame(() => fieldRef.current?.focus());
+  }
   return (
     <dialog
       className={'modal ' + (wide ? 'modal-wide' : '')}
       ref={ref}
       onCancel={(e) => {
         e.preventDefault();
-        onClose();
+        if (confirmClose) continueEditing();
+        else requestClose();
       }}
-      aria-labelledby="modal-title"
+      aria-labelledby={titleId}
     >
       <div className="modal-head">
-        <h2 id="modal-title">{title}</h2>
-        <button className="icon-button" aria-label="Loka glugga" onClick={onClose}>
+        <h2 id={titleId}>{confirmClose ? 'Loka án þess að vista?' : title}</h2>
+        <button
+          className="icon-button"
+          aria-label="Loka glugga"
+          disabled={busy}
+          onClick={requestClose}
+        >
           <X size={22} />
         </button>
       </div>
-      {children}
+      <div hidden={confirmClose}>{children}</div>
+      {confirmClose && (
+        <div className="discard-confirmation">
+          <p>
+            Það sem þú hefur skrifað eða breytt hefur ekki verið vistað. Þú getur haldið áfram eða
+            lokað án þess að vista.
+          </p>
+          <div className="button-row">
+            <button className="button" ref={continueRef} onClick={continueEditing}>
+              Halda áfram
+            </button>
+            <button className="text-button" onClick={onClose}>
+              Loka án þess að vista
+            </button>
+          </div>
+        </div>
+      )}
     </dialog>
   );
 }

@@ -3,6 +3,8 @@ import { demoData } from '@/lib/demo';
 import { EMPTY_DATA } from '@/lib/domain/types';
 import { actionFromQuery } from '@/lib/domain/notifications';
 export const dynamic = 'force-dynamic';
+// AppShell owns the reactive screen title, including fragment navigation.
+export const metadata = { title: null };
 export default async function Demo({
   searchParams,
 }: {

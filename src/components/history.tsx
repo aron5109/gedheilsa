@@ -101,11 +101,13 @@ export function History({
   timezone,
   pendingIds,
   onShare,
+  onAdd,
 }: {
   entries: MoodEntry[];
   timezone: string;
   pendingIds: string[];
   onShare: () => void;
+  onAdd: () => void;
 }) {
   const [mode, setMode] = useState<'day' | 'week' | 'month'>('week'),
     [anchor, setAnchor] = useState(() => dayKey(new Date(), timezone)),
@@ -128,7 +130,6 @@ export function History({
     <>
       <div className="section-heading">
         <div>
-          <span className="eyebrow">LÍÐAN YFIR TÍMA</span>
           <h1>Dagarnir þínir.</h1>
           <p className="muted">Lítið yfirlit getur hjálpað þér að sjá stærri myndina.</p>
         </div>
@@ -205,6 +206,11 @@ export function History({
           <Empty title="Hér fær líðanin þín pláss.">
             Engin líðan hefur verið skráð á þessu tímabili.
           </Empty>
+        )}
+        {!selected.length && (
+          <button className="button" onClick={onAdd}>
+            Skrá líðan
+          </button>
         )}
         <p className="chart-note">
           Súlur sýna meðaltal hvers dags. Punktur merkir að skráningu vantar. Meðaltöl eru lýsandi

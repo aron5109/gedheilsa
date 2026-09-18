@@ -5,6 +5,8 @@ import { emailReady } from '@/lib/server/mail';
 import { AppShell } from '@/components/app-shell';
 import { actionFromQuery } from '@/lib/domain/notifications';
 export const dynamic = 'force-dynamic';
+// AppShell owns the reactive screen title, including fragment navigation.
+export const metadata = { title: null };
 export default async function AppPage({
   searchParams,
 }: {

@@ -81,3 +81,7 @@ CI keyrir án raunverulegra heilsugagna eða framleiðslulykla. Google/Resend/We
 GitHub geymir aðeins kóða, prófunargögn og leiðbeiningar. **Aldrei** setja raunveruleg heilsugögn, `.env.local`, Supabase service role eða skjáskot raunverulegra notenda í þetta opinbera repository. Ekki hafa heilsugögn í GitHub Issues.
 
 [Arkitektúr og ákvarðanir](docs/ARKITEKTUR.md) · [Uppsetning](docs/UPPSETNING.md) · [Rekstur og gagnavarðveisla](docs/REKSTUR.md) · [Vegvísir](docs/VEGVISIR.md) · [Öryggismál](SECURITY.md)
+
+## Samræmd hönnun og UX
+
+Verkefnið inniheldur Impeccable-leiðbeiningar, [vörusamhengi](PRODUCT.md), [hönnunarkerfi](DESIGN.md) og [yfirferð með niðurstöðum](docs/IMPECCABLE.md). Skapskráning notar stóra samantekt og valkvæða aukareiti; óvistaðar breytingar eru varðar við lokun og aðalskjáir styðja bakflettingu.
