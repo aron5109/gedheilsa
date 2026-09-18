@@ -4,6 +4,8 @@
 
 Node.js 24 LTS er notað í CI. Node 22 er einnig leyft. Keyrðu `npm ci`, afritaðu `.env.example` í `.env.local` og keyrðu `npm run dev`. `/demo` virkar án lykla. `/app` krefst innskráningar og raunverulegs gagnagrunns.
 
+`npm run typecheck` kallar beint á TypeScript 7 í `@typescript/native`, svo uppsetningarröð npm ráði ekki hvaða `tsc` keyrir. TypeScript 6-samhæfingarpakkinn veitir JavaScript API sem ESLint og Next.js þurfa enn. Báðar útgáfur eru settar upp með npm-alias samkvæmt [leiðbeiningum TypeScript](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0). Ekki skipta `typescript`-aliasinu beint yfir í útgáfu 7 fyrr en þessi verkfæri styðja nýja API-ið; það stöðvar gæðaprófanir.
+
 ## 2. Supabase og gagnagrunnur
 
 1. Stofnaðu sérstakt Supabase-prófunarverkefni. Veldu viðeigandi evrópska staðsetningu og staðfestu vinnslusamning/varðveislu áður en raunveruleg heilsugögn eru skráð.
