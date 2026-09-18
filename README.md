@@ -25,7 +25,7 @@ Opnaðu `http://localhost:3000/demo` fyrir gagnvirkt sýnishorn með tilbúnum f
 | Hluti            | Virkni                                                                                                        |
 | ---------------- | ------------------------------------------------------------------------------------------------------------- |
 | Íslenskt viðmót  | Síma- og tölvuviðmót, stór val fyrir líðan, róleg litun, lyklaborð og skert hreyfing                          |
-| Google + prófíll | OAuth/PKCE með Supabase, nafn, valkvætt fæðingarár, tímabelti, áhugamál og persónulegar hugmyndir             |
+| Google + prófíll | Google OAuth með Neon Auth, nafn, valkvætt fæðingarár, tímabelti, áhugamál og persónulegar hugmyndir          |
 | Skapskráning     | Margar sjálfstæðar færslur á dag; líðan 1–5, orka, tilfinningar, valkvæður texti og tími                      |
 | Yfirlit          | Dagur/vika/mánuður, meðaltöl, dreifing og allar einstakar færslur                                             |
 | Hversdagurinn    | Handvirk skráning á vatni, svefni, hreyfingu og skrefum                                                       |
@@ -36,16 +36,22 @@ Opnaðu `http://localhost:3000/demo` fyrir gagnvirkt sýnishorn með tilbúnum f
 | Varðveisla       | PostgreSQL + RLS, óbreytanlegar mælingar, UUID, endursending án tvískráningar og valkvæð IndexedDB-biðgeymsla |
 | Prófanir         | TypeScript, ESLint, Vitest, raunveruleg PostgreSQL/RLS-próf í PGlite, Playwright og axe                       |
 
+## Málfar og símaútlit
+
+Skapsvalið er aðalatriði forsíðunnar, með stórum snertiflötum í síma. Daglega birtast ný **orð dagsins** úr banka með 31 frumsömdum texta og **fróðleiksmoli** úr 12 heimildastuddum textum. Persónulegar tilkynningar eru valkvæðar og hafa forskoðun í Mitt rými.
+
+[Textastefna, heimildir og aðgengisviðmið](docs/MALFAR-OG-ADGENGI.md). Nýja SQL-breytingin `202609180002_personal_notifications.sql` þarf að vera komin inn áður en þessi útgáfa er sett í notkun.
+
 ## Tæknigrunnur
 
-Next.js App Router · React · TypeScript · Supabase PostgreSQL/Auth · Zod · Web Push · Resend. Enginn greiningar- eða auglýsingarekjakóði. Engin LLM-þjónusta fær notendagögn; persónulegar hugmyndir eru valdar með einfaldri, gagnsærri rökfræði.
+Next.js App Router · React · TypeScript · Neon PostgreSQL / Managed Better Auth · Zod · Web Push · Resend. Enginn greiningar- eða auglýsingarekjakóði. Engin LLM-þjónusta fær notendagögn; persónulegar hugmyndir eru valdar með einfaldri, gagnsærri rökfræði.
 
 ```text
 src/app/                 Síður og sannreyndar API-leiðir
 src/components/          Íslenskt viðmót, eyðublöð og biðgeymslusamstilling
 src/lib/domain/          Týpur, sannprófun, dagsetningar, stuðningsregla og útflutningur
 src/lib/server/          Aðgangur, tölvupóstur, síðuð gagnasókn og tilkynningavinnsla
-supabase/migrations/     Gagnagrunnur, reglur, RLS og RPC-aðgerðir
+db/migrations/           Neon-gagnagrunnur, reglur, RLS og SQL-aðgerðir
 tests/                   Eininga-, gagnagrunns- og vafrapróf
 docs/                    Uppsetning, arkitektúr, rekstur og áframhald
 ```
@@ -55,11 +61,11 @@ docs/                    Uppsetning, arkitektúr, rekstur og áframhald
 ```bash
 npm run check
 npm run format:check
-npx playwright install chromium
+npx playwright install chromium webkit
 npm run test:e2e
 ```
 
-CI keyrir án raunverulegra heilsugagna eða framleiðslulykla. Google/Resend/Web Push þurfa viðbótarprófun gegn stilltu prófunarumhverfi áður en farið er í notkun. RLS-prófin keyra sama migration í innbyggðri PostgreSQL-vél; staðfesta þarf einnig Supabase-uppsetninguna sjálfa.
+CI keyrir án raunverulegra heilsugagna eða framleiðslulykla. Google/Resend/Web Push þurfa viðbótarprófun gegn stilltu prófunarumhverfi áður en farið er í notkun. RLS-prófin keyra sama migration í innbyggðri PostgreSQL-vél; staðfesta þarf einnig Neon-uppsetninguna sjálfa.
 
 ## Mikilvæg mörk
 
@@ -72,6 +78,10 @@ CI keyrir án raunverulegra heilsugagna eða framleiðslulykla. Google/Resend/We
 
 ## Gögn og öryggi
 
-GitHub geymir aðeins kóða, prófunargögn og leiðbeiningar. **Aldrei** setja raunveruleg heilsugögn, `.env.local`, Supabase service role eða skjáskot raunverulegra notenda í þetta opinbera repository. Ekki hafa heilsugögn í GitHub Issues.
+GitHub geymir aðeins kóða, prófunargögn og leiðbeiningar. **Aldrei** setja raunveruleg heilsugögn, `.env.local`, gagnagrunnstengislóðir eða Auth cookie secret eða skjáskot raunverulegra notenda í þetta opinbera repository. Ekki hafa heilsugögn í GitHub Issues.
 
 [Arkitektúr og ákvarðanir](docs/ARKITEKTUR.md) · [Uppsetning](docs/UPPSETNING.md) · [Rekstur og gagnavarðveisla](docs/REKSTUR.md) · [Vegvísir](docs/VEGVISIR.md) · [Öryggismál](SECURITY.md)
+
+## Samræmd hönnun og UX
+
+Verkefnið inniheldur Impeccable-leiðbeiningar, [vörusamhengi](PRODUCT.md), [hönnunarkerfi](DESIGN.md) og [yfirferð með niðurstöðum](docs/IMPECCABLE.md). Skapskráning notar stóra samantekt og valkvæða aukareiti; óvistaðar breytingar eru varðar við lokun og aðalskjáir styðja bakflettingu.

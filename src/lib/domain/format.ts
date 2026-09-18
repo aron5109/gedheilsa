@@ -68,3 +68,9 @@ export function formatNumber(value: number, maximumFractionDigits = 1) {
   const decimal = fraction?.replace(/0+$/, '');
   return whole.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (decimal ? ',' + decimal : '');
 }
+export function isSingular(count: number) {
+  return Math.abs(count) % 10 === 1 && Math.abs(count) % 100 !== 11;
+}
+export function registrationCount(count: number) {
+  return `${formatNumber(count, 0)} ${isSingular(count) ? 'skráning' : 'skráningar'}`;
+}

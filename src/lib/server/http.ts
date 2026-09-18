@@ -1,6 +1,7 @@
 import 'server-only';
 import { NextResponse } from 'next/server';
-import { userClient, adminClient, configured } from '@/lib/supabase/server';
+import { currentUser, configured } from '@/lib/neon/auth';
+import { userDatabase, workerDatabase } from '@/lib/neon/database';
 import type { ZodType } from 'zod';
 export class HttpError extends Error {
   constructor(
@@ -23,10 +24,9 @@ export async function guard(request: Request, mutation = false) {
     if (origin !== expected) throw new HttpError(403, 'Beiðnin var ekki samþykkt.');
   }
   if (!configured()) throw new HttpError(503, 'Innskráning og gagnageymsla bíða uppsetningar.');
-  const db = await userClient();
-  const { data, error } = await db.auth.getUser();
-  if (error || !data.user) throw new HttpError(401, 'Skráðu þig inn til að halda áfram.');
-  return { db, user: data.user };
+  const user = await currentUser();
+  if (!user) throw new HttpError(401, 'Skráðu þig inn til að halda áfram.');
+  return { db: userDatabase(user.id), user };
 }
 export async function body<T>(request: Request, schema: ZodType<T>): Promise<T> {
   const reader = request.body?.getReader();
@@ -59,15 +59,13 @@ export function failure(error: unknown) {
   if (error instanceof HttpError) return json({ error: error.message }, error.status);
   return json({ error: 'Ekki tókst að ljúka aðgerðinni. Reyndu aftur.' }, 500);
 }
-export function check(error: { message: string } | null) {
+export function check(error: { message?: string } | null) {
   if (error) throw new HttpError(500, 'Ekki tókst að vista eða sækja gögn. Reyndu aftur.');
 }
 export async function rateLimit(userId: string, action: string, max = 10) {
-  const { data, error } = await adminClient().rpc('consume_rate_limit', {
-    rate_key: `${userId}:${action}`,
-    max_hits: max,
-    window_seconds: 3600,
-  });
-  check(error);
-  if (!data) throw new HttpError(429, 'Of margar beiðnir. Reyndu aftur síðar.');
+  const [result] = await workerDatabase().query<{ allowed: boolean }>(
+    'select hlyja.consume_rate_limit($1,$2,$3) as allowed',
+    [`${userId}:${action}`, max, 3600],
+  );
+  if (!result.allowed) throw new HttpError(429, 'Of margar beiðnir. Reyndu aftur síðar.');
 }

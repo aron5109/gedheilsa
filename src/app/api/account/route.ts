@@ -1,12 +1,14 @@
 import { z } from 'zod';
-import { guard, json, failure, body, check } from '@/lib/server/http';
-import { adminClient } from '@/lib/supabase/server';
+import { guard, json, failure, body, check, HttpError } from '@/lib/server/http';
+import { authServer } from '@/lib/neon/auth';
 export async function DELETE(request: Request) {
   try {
-    const { user } = await guard(request, true);
+    await guard(request, true);
     await body(request, z.object({ confirmation: z.literal('EYÐA ÖLLU') }));
-    const { error } = await adminClient().auth.admin.deleteUser(user.id);
+    const { data, error } = await authServer().deleteUser({});
     check(error);
+    if (!data?.success || data.message !== 'User deleted')
+      throw new HttpError(409, 'Ekki tókst að ljúka eyðingu. Skráðu þig inn aftur og reyndu á ný.');
     return json({ ok: true });
   } catch (e) {
     return failure(e);

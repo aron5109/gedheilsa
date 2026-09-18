@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import type { AppData, Profile, Contact, QueuedEntry } from '@/lib/domain/types';
 import { INTERESTS } from '@/lib/domain/mood';
+import { reminderMessage } from '@/lib/domain/notifications';
 import { api, download, setStorageConsent, storageConsent } from '@/lib/client';
 import { profilePayload } from './onboarding';
 import { Modal, ErrorMessage, HelpCard } from './ui';
@@ -149,6 +150,25 @@ export function Settings({
       setBusy('');
     }
   }
+  async function savePersonalNotifications(enabled: boolean) {
+    setBusy('personal-notifications');
+    setError('');
+    setMessage('');
+    try {
+      const saved = demo
+        ? { ...profile, personal_notifications: enabled }
+        : await api<Profile>('/api/profile', 'POST', {
+            ...profilePayload(profile),
+            personal_notifications: enabled,
+          });
+      onChange({ ...data, profile: saved });
+      setMessage('Stillingar fyrir persónulegar tilkynningar vistaðar.');
+    } catch (error) {
+      setError((error as Error).message);
+    } finally {
+      setBusy('');
+    }
+  }
   async function disablePush() {
     setBusy('push');
     setError('');
@@ -238,7 +258,7 @@ export function Settings({
               <div>
                 <h3>{profile.name}</h3>
                 <p className="muted small">
-                  {profile.birth_year ? `Fædd/ur ${profile.birth_year} · ` : ''}
+                  {profile.birth_year ? `Fæðingarár: ${profile.birth_year} · ` : ''}
                   {profile.timezone}
                 </p>
               </div>
@@ -267,9 +287,31 @@ export function Settings({
               </h2>
             </div>
             <p className="muted small">
-              Á læstum skjá birtast almenn skilaboð. Heiti lyfja og upplýsingar um líðan birtast
-              aðeins inni í appinu.
+              Þú velur tímana undir Áminningar. Þú getur líka valið persónulega kveðju hér fyrir
+              neðan.
             </p>
+            <label className="checkbox">
+              <input
+                type="checkbox"
+                checked={profile.personal_notifications ?? false}
+                disabled={Boolean(busy)}
+                onChange={(e) => void savePersonalNotifications(e.target.checked)}
+                aria-describedby="notification-privacy"
+              />
+              <span>Persónulegar tilkynningar með fornafninu mínu</span>
+            </label>
+            <p id="notification-privacy" className="small muted">
+              Nafnið þitt og almenn áminning um líðan, vatn eða svefn geta þá sést á læsiskjánum.
+              Skráð líðan, lyfjaheiti og upplýsingar um læknistíma birtast aldrei þar. Þú getur
+              slökkt á þessu hvenær sem er.
+            </p>
+            <div className="notification-preview" aria-label="Dæmi um tilkynningu">
+              <Bell size={20} aria-hidden="true" />
+              <div>
+                <strong>Hlýja</strong>
+                <p>{reminderMessage(profile, 'mood').body}</p>
+              </div>
+            </div>
             {pushReady && !demo ? (
               <div className="button-row">
                 <button

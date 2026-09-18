@@ -117,22 +117,23 @@ export function suggestions(profile: Profile | null, score?: number) {
         personal ||
         (interests.includes('Tónlist') ? 'Eitt lag sem þér þykir vænt um' : 'Smá stund fyrir þig'),
       description: personal
-        ? 'Þú sagðir að þetta gerði þér gott. Kannski er pláss fyrir litla stund í dag.'
-        : 'Settu á rólega tónlist og leyfðu þér að vera, án þess að þurfa að afkasta.',
+        ? 'Þetta er eitt af því sem þú nýtur. Kannski er gott að gefa því smá stund í dag.'
+        : 'Settu á lag sem þér þykir vænt um og hlustaðu í rólegheitum.',
       time: '5 mín.',
       icon: 'music',
     },
     {
       title: interests.includes('Gæludýr') ? 'Stund með dýrinu þínu' : 'Fáðu örlítið ferskt loft',
-      description:
-        score && score <= 2
+      description: interests.includes('Gæludýr')
+        ? 'Kannski er gott að sitja hjá dýrinu þínu eða leika smá stund, ef það hentar.'
+        : score && score <= 2
           ? 'Lítið skref má vera nóg. Opnaðu glugga eða stígðu út ef það hentar þér.'
           : 'Stuttur göngutúr á þínum hraða. Þú ræður hversu langt þú ferð.',
       time: '5–10 mín.',
       icon: 'leaf',
     },
     {
-      title: 'Heyrðu í einhverjum',
+      title: 'Heyrðu í einhverjum sem þér þykir vænt um',
       description: 'Stutt skilaboð til manneskju sem þér líður vel með geta verið góð byrjun.',
       time: 'Á þínum hraða',
       icon: 'heart',

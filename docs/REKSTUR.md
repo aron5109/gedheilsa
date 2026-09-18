@@ -9,7 +9,7 @@
 - [ ] Viðeigandi fagfólk hefur metið notendatexta, stuðningsreglu, lyfjaáminningar og hvort fyrirhugaður tilgangur kalli á viðbótarkröfur.
 - [ ] Vinnslusamningar og staðsetning gagna hjá hýsingu, gagnagrunni og tölvupóstþjónustu hafa verið yfirfarin.
 - [ ] Aðgangur stjórnenda er takmarkaður, MFA virkt og framleiðslu-/prófunarumhverfi aðskilin.
-- [ ] RLS, session-útrennsli, útskráning, lykilskipti og eyðing reiknings hafa verið prófuð á stilltu Supabase-verkefni.
+- [ ] RLS, session-útrennsli, útskráning, lykilskipti og eyðing reiknings hafa verið prófuð á stilltri Neon-grein.
 - [ ] Cron keyrir á fimm mínútna fresti; varnarlykill er sannreyndur og biðraðarvöktun virk.
 - [ ] Raunveruleg Google-, netfangsstaðfestingar-, afturköllunar- og Web Push-flæði hafa verið prófuð á Android, iPhone og tölvu með tilbúnum gögnum.
 - [ ] Aðgengisprófun með lyklaborði, VoiceOver/TalkBack og stærra letri hefur verið framkvæmd auk sjálfvirkra axe-prófa.
@@ -18,7 +18,7 @@
 
 ## Afrit og endurheimt
 
-1. Veldu og virkjaðu viðeigandi Supabase-afrit/PITR-áætlun. Staðfestu hvað þjónustuáskriftin nær raunverulega yfir; kóðinn kveikir ekki á greiddri afritunarþjónustu.
+1. Veldu og virkjaðu viðeigandi Neon-afrit/PITR-áætlun. Staðfestu hvað þjónustuáskriftin nær raunverulega yfir; kóðinn kveikir ekki á greiddri afritunarþjónustu.
 2. Skilgreindu RPO og RTO með ábyrgðaraðila. Skráðu þau, t.d. hversu langt aftur má tapa óafrituðum breytingum og hve hratt þarf að endurheimta.
 3. Geymdu viðbótarafrit aðeins í samþykktri dulkóðaðri geymslu með takmörkuðum aðgangi. Aldrei GitHub, opinn object bucket eða tölvupóstur.
 4. Endurheimtu reglulega í aðskilið, læst umhverfi og sannprófaðu notendafjölda, færslufjölda, tímasetningar og RLS. Notaðu gagnaskrá án heilsuinnihalds til að skrá niðurstöðu prófs.

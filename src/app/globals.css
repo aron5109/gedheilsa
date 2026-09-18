@@ -7,8 +7,14 @@
   --green-deep: #294d3f;
   --line: #e6eae1;
   --sage: #eaf0e4;
+  --radius-panel: 16px;
+  --radius-control: 12px;
+  --radius-sheet: 24px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
   --serif: Georgia, 'Times New Roman', serif;
-  --sans: Arial, Helvetica, sans-serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
 }
 * {
   box-sizing: border-box;
@@ -18,7 +24,7 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -78,19 +84,19 @@ h1 {
   font-family: var(--serif);
   font-weight: 400;
   letter-spacing: -1.2px;
-  font-size: 38px;
+  font-size: 2.375rem;
   line-height: 1.22;
   margin-bottom: 12px;
 }
 h2 {
-  font-size: 19px;
+  font-size: 1.1875rem;
   font-weight: 600;
   letter-spacing: -0.4px;
   line-height: 1.4;
   margin-bottom: 8px;
 }
 h3 {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
   line-height: 1.4;
   margin-bottom: 8px;
@@ -110,11 +116,11 @@ fieldset {
 legend {
   margin-bottom: 12px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 0.875rem;
 }
 label {
   display: block;
-  font-size: 13px;
+  font-size: 0.875rem;
   font-weight: 600;
   margin: 20px 0;
 }
@@ -161,21 +167,21 @@ hr {
   color: var(--muted);
 }
 .small {
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 .optional {
-  font-size: 12px;
+  font-size: 0.875rem;
   color: var(--muted);
   font-weight: 400;
 }
 .lead {
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.8;
   color: var(--muted);
 }
 .eyebrow {
   display: block;
-  font-size: 11px;
+  font-size: 0.75rem;
   letter-spacing: 1.6px;
   font-weight: 600;
   color: #53644f;
@@ -213,7 +219,7 @@ hr {
   border-radius: 10px;
   background: var(--green);
   color: #fff;
-  font-size: 13px;
+  font-size: 0.875rem;
   font-weight: 600;
   text-decoration: none;
   transition:
@@ -243,7 +249,7 @@ hr {
 .small-button {
   padding: 7px 13px;
   min-height: 34px;
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 .text-button {
   border: 0;
@@ -252,7 +258,7 @@ hr {
   display: inline-flex;
   gap: 6px;
   align-items: center;
-  font-size: 12px;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--green);
   text-decoration: none;
@@ -283,7 +289,7 @@ hr {
 .brand {
   display: inline-flex;
   align-items: center;
-  font-size: 32px;
+  font-size: 2rem;
   font-family: var(--serif);
   font-weight: 600;
   letter-spacing: -1.1px;
@@ -309,7 +315,7 @@ hr {
   color: #9baf86;
 }
 .brand-small {
-  font-size: 27px;
+  font-size: 1.6875rem;
 }
 .brand-small .brand-mark {
   width: 34px;
@@ -327,13 +333,13 @@ hr {
   color: #4e684b;
   font-weight: 600;
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: 1.125rem;
   flex-shrink: 0;
 }
 .avatar.large {
   width: 54px;
   height: 54px;
-  font-size: 26px;
+  font-size: 1.625rem;
 }
 .tile-icon {
   width: 41px;
@@ -380,7 +386,7 @@ hr {
   padding-left: 10px;
 }
 .sidebar-tagline {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #5f6c61;
   padding-left: 10px;
   margin: 15px 0 48px;
@@ -397,7 +403,7 @@ hr {
   border: 0;
   background: none;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 0.875rem;
   font-weight: 500;
   text-align: left;
   min-height: 48px;
@@ -433,12 +439,12 @@ hr {
 }
 .sidebar-note p {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: 1.1875rem;
   line-height: 1.55;
   margin-bottom: 8px;
 }
 .sidebar-note > span:last-child {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 .sidebar-bottom {
@@ -449,7 +455,7 @@ hr {
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #69786d;
   padding: 15px 7px;
 }
@@ -470,10 +476,10 @@ hr {
   flex: 1;
 }
 .sidebar-bottom strong {
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 .sidebar-bottom small {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 .main-wrap {
@@ -491,7 +497,7 @@ hr {
   background: #fbfcf8;
 }
 .breadcrumb {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--muted);
   display: flex;
   gap: 14px;
@@ -509,8 +515,8 @@ hr {
   gap: 20px;
 }
 .sync-state {
-  font-size: 11px;
-  color: #657868;
+  font-size: 0.75rem;
+  color: #526553;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -522,7 +528,7 @@ hr {
   border: 1px solid #d8e0d0;
   width: 32px;
   height: 32px;
-  font-size: 15px;
+  font-size: 1rem;
 }
 .mobile-brand,
 .mobile-nav {
@@ -534,7 +540,7 @@ hr {
   padding: 30px 43px 16px;
 }
 .demo-banner {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #65705e;
   margin: -10px 0 30px;
   display: flex;
@@ -562,7 +568,7 @@ hr {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 12px;
+  font-size: 0.875rem;
   padding: 14px;
   background: #fbefdb;
   color: #7f5e32;
@@ -584,17 +590,16 @@ hr {
 }
 .section-heading p {
   margin: 0;
-  font-size: 13px;
+  font-size: 0.875rem;
 }
 .section-heading .eyebrow {
-  font-size: 11px;
+  font-size: 0.75rem;
   letter-spacing: 1.8px;
   margin-bottom: 12px;
 }
 .date-label {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #677463;
-  text-transform: capitalize;
   white-space: nowrap;
   border: 1px solid #dfe5d8;
   border-radius: 7px;
@@ -604,7 +609,7 @@ hr {
 }
 .dashboard-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(290px, 1fr);
+  grid-template-columns: minmax(0, 1.7fr) minmax(290px, 1fr);
   gap: 23px;
 }
 .dashboard-primary,
@@ -642,20 +647,20 @@ hr {
 }
 .card-heading .eyebrow {
   margin: 0;
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .mood-card {
   padding: 26px 27px 16px;
 }
 .mood-card h2 {
   font-family: var(--serif);
-  font-size: 27px;
+  font-size: 1.6875rem;
   font-weight: 400;
   margin: 20px 0 4px;
   letter-spacing: -0.7px;
 }
 .mood-card > p {
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 .mood-options {
   display: flex;
@@ -674,7 +679,7 @@ hr {
   padding: 10px 5px;
   flex: 1;
   min-width: 0;
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #657266;
   transition:
     background 0.15s,
@@ -697,7 +702,7 @@ hr {
   margin: 20px -3px 20px;
 }
 .dashboard-moods .mood-option {
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .mood-card-footer {
   border-top: 1px solid #edf0e8;
@@ -705,7 +710,7 @@ hr {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #626e60;
 }
 .mood-card-footer > span {
@@ -714,17 +719,17 @@ hr {
   gap: 6px;
 }
 .mood-card-footer .text-button {
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .weekly-card {
   padding: 23px 25px 18px;
   flex: 1;
 }
 .weekly-card h2 {
-  font-size: 15px;
+  font-size: 1rem;
 }
 .weekly-card .card-heading p {
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .weekly-value {
   display: flex;
@@ -733,16 +738,16 @@ hr {
   margin: 12px 0 0;
 }
 .weekly-value strong {
-  font-size: 26px;
+  font-size: 1.625rem;
   font-weight: 500;
   letter-spacing: -0.9px;
 }
 .weekly-value .small {
-  font-size: 11px;
+  font-size: 0.75rem;
   margin-top: 5px;
 }
 .weekly-value p {
-  font-size: 12px;
+  font-size: 0.875rem;
   margin: 5px 0;
 }
 .mood-chart {
@@ -764,7 +769,7 @@ hr {
   justify-content: space-between;
   width: 48px;
   padding: 0 0 12px;
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #677564;
   flex-shrink: 0;
 }
@@ -833,11 +838,10 @@ hr {
   margin-bottom: 2px;
 }
 .chart-date {
-  font-size: 11px;
+  font-size: 0.75rem;
   line-height: 1;
   height: 12px;
   color: #6d7968;
-  text-transform: capitalize;
   white-space: nowrap;
 }
 .chart-footer {
@@ -846,7 +850,7 @@ hr {
   align-items: center;
   border-top: 1px solid var(--line);
   padding-top: 12px;
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 .chart-footer > span {
@@ -861,7 +865,7 @@ hr {
   background: #7a9978;
 }
 .chart-footer .text-button {
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .gentle-card {
   border-radius: 17px;
@@ -874,14 +878,14 @@ hr {
   border: 1px solid #dfe6d3;
 }
 .gentle-card .eyebrow {
-  font-size: 11px;
+  font-size: 0.75rem;
   margin-bottom: 24px;
   position: relative;
 }
 .gentle-card h2 {
   position: relative;
   font-family: var(--serif);
-  font-size: 31px;
+  font-size: 1.9375rem;
   line-height: 1.25;
   font-weight: 400;
   letter-spacing: -0.7px;
@@ -889,31 +893,19 @@ hr {
 }
 .gentle-card > p {
   position: relative;
-  font-size: 11px;
+  font-size: 0.75rem;
   line-height: 1.9;
   color: #57684e;
   margin-bottom: 22px;
   max-width: 230px;
 }
-.gentle-art {
-  position: absolute;
-  width: 172px;
-  height: 165px;
-  right: -19px;
-  top: 3px;
-  opacity: 0.83;
-  transform: rotate(8deg);
-}
-.gentle-art svg {
-  width: 100%;
-  height: 100%;
-}
+
 .gentle-link {
   position: relative;
   display: flex;
   gap: 7px;
   align-items: center;
-  font-size: 11px;
+  font-size: 0.75rem;
   border: 0;
   border-bottom: 1px solid #aaba98;
   padding: 0 0 3px;
@@ -924,7 +916,7 @@ hr {
   padding: 22px 23px;
 }
 .daily-reminder h2 {
-  font-size: 14px;
+  font-size: 1rem;
 }
 .next-routine {
   display: flex;
@@ -933,15 +925,15 @@ hr {
   margin: 22px 0 18px;
 }
 .next-routine strong {
-  font-size: 12px;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 .next-routine p {
-  font-size: 11px;
+  font-size: 0.75rem;
   margin: 2px 0 0;
 }
 .daily-reminder > .text-button {
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .subsection-heading {
   margin: 29px 0 17px;
@@ -951,16 +943,16 @@ hr {
   gap: 15px;
 }
 .subsection-heading h2 {
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 500;
   margin-bottom: 4px;
 }
 .subsection-heading p {
-  font-size: 11px;
+  font-size: 0.75rem;
   margin: 0;
 }
 .subsection-heading > .text-button {
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .wellbeing-grid {
   display: grid;
@@ -985,7 +977,7 @@ hr {
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 12px;
+  font-size: 0.875rem;
   font-weight: 600;
   width: 100%;
   margin-bottom: 16px;
@@ -1003,20 +995,20 @@ hr {
   width: 17px;
 }
 .wellbeing-card > strong {
-  font-size: 27px;
+  font-size: 1.6875rem;
   line-height: 1.3;
   letter-spacing: -0.9px;
   font-weight: 500;
   margin-bottom: 4px;
 }
 .wellbeing-card > strong small {
-  font-size: 12px;
+  font-size: 0.875rem;
   font-weight: 400;
   letter-spacing: 0;
   color: var(--muted);
 }
 .wellbeing-card > .small {
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .water-progress {
   display: flex;
@@ -1034,21 +1026,12 @@ hr {
 .water-progress .filled {
   background: #91b5c6;
 }
-.sleep-wave {
-  height: 28px;
-  width: 100%;
-  overflow: hidden;
-  margin-top: 14px;
-}
-.sleep-wave svg {
-  width: 100%;
-  height: 100%;
-}
+
 .movement-caption {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #5b6d52;
   margin-top: 22px;
   height: 21px;
@@ -1080,15 +1063,15 @@ hr {
   position: absolute;
   top: 27px;
   right: 20px;
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #687363;
 }
 .suggestion-card h3 {
-  font-size: 12px;
+  font-size: 0.875rem;
   margin: 16px 0 8px;
 }
 .suggestion-card p {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #64715e;
   line-height: 1.8;
   margin: 0 0 12px;
@@ -1103,7 +1086,7 @@ hr {
   align-items: center;
   gap: 5px;
   color: #576a4d;
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .dashboard-footer {
   display: flex;
@@ -1111,7 +1094,7 @@ hr {
   justify-content: center;
   gap: 7px;
   color: #596a50;
-  font-size: 11px;
+  font-size: 0.75rem;
   margin: 32px 0 6px;
 }
 .history-controls {
@@ -1133,7 +1116,7 @@ hr {
   border-radius: 7px;
   background: transparent;
   padding: 8px 17px;
-  font-size: 12px;
+  font-size: 0.875rem;
   color: #617359;
 }
 .segmented button.active {
@@ -1148,7 +1131,7 @@ hr {
 }
 .period-picker input {
   width: 147px !important;
-  font-size: 12px;
+  font-size: 0.875rem;
   padding: 7px !important;
   min-height: 36px !important;
   margin: 0 !important;
@@ -1167,11 +1150,11 @@ hr {
   gap: 10px;
 }
 .history-summary strong {
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 500;
 }
 .history-summary small {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--muted);
   font-weight: 400;
 }
@@ -1179,11 +1162,11 @@ hr {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 17px;
+  font-size: 1.0625rem;
   height: 44px;
 }
 .chart-note {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--muted);
   margin-top: 5px;
 }
@@ -1201,11 +1184,11 @@ hr {
   gap: 6px;
 }
 .mood-distribution span {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 .mood-distribution strong {
-  font-size: 15px;
+  font-size: 1rem;
 }
 .entry-row {
   display: flex;
@@ -1220,20 +1203,20 @@ hr {
 }
 .entry-row strong {
   display: block;
-  font-size: 13px;
+  font-size: 0.875rem;
 }
 .entry-row .muted {
   display: block;
-  font-size: 11px;
+  font-size: 0.75rem;
   margin-top: 2px;
 }
 .emotion-text {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #617752;
   margin: 8px 0;
 }
 .entry-note {
-  font-size: 13px;
+  font-size: 0.875rem;
   margin: 8px 0 0;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -1250,11 +1233,11 @@ hr {
 .empty-state h3 {
   color: var(--ink);
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 400;
 }
 .empty-state p {
-  font-size: 12px;
+  font-size: 0.875rem;
   max-width: 330px;
   margin: 0 auto;
 }
@@ -1276,11 +1259,11 @@ hr {
 }
 .routine-title strong {
   display: block;
-  font-size: 14px;
+  font-size: 1rem;
 }
 .routine-title .muted {
   display: block;
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .routine-slots {
   margin: 14px 0 0 54px;
@@ -1296,7 +1279,7 @@ hr {
   display: flex;
   gap: 8px;
   align-items: center;
-  font-size: 12px;
+  font-size: 0.875rem;
   color: var(--muted);
 }
 .status-pill {
@@ -1308,7 +1291,7 @@ hr {
   border-radius: 6px;
   background: #f4f0e7;
   color: #715e3b;
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .status-pill.good {
   background: #eaf1e4;
@@ -1316,7 +1299,7 @@ hr {
 }
 .footnote {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 0.75rem;
   margin: 20px 0 0;
   line-height: 1.8;
 }
@@ -1331,7 +1314,7 @@ hr {
   flex: 1;
 }
 .appointment-item h3 {
-  font-size: 14px;
+  font-size: 1rem;
   margin-bottom: 5px;
 }
 .appointment-item p {
@@ -1344,7 +1327,7 @@ hr {
   margin-top: 14px;
 }
 .calendar-actions .text-button {
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .settings-grid {
   display: grid;
@@ -1355,7 +1338,7 @@ hr {
   padding: 25px;
 }
 .settings-grid .card-heading h2 {
-  font-size: 16px;
+  font-size: 1rem;
 }
 .profile-summary {
   display: flex;
@@ -1364,22 +1347,22 @@ hr {
   margin: 24px 0;
 }
 .profile-summary h3 {
-  font-size: 18px;
+  font-size: 1.125rem;
   margin: 0 0 3px;
 }
 .profile-summary p {
   margin: 0;
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .comfort-list {
   margin-top: 25px;
 }
 .comfort-list .eyebrow {
-  font-size: 11px;
+  font-size: 0.75rem;
   margin: 0 0 8px;
 }
 .comfort-list p {
-  font-size: 12px;
+  font-size: 0.875rem;
   margin: 3px 0;
   color: #64735a;
 }
@@ -1393,7 +1376,7 @@ hr {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  font-size: 11px;
+  font-size: 0.75rem;
   padding: 7px 12px;
   min-height: 34px;
   border: 1px solid #dbe2d5;
@@ -1406,7 +1389,7 @@ hr {
   border-color: #819875;
 }
 .chip.soft {
-  font-size: 11px;
+  font-size: 0.75rem;
   background: #f3f5ed;
   border-color: #e5eadc;
   min-height: 28px;
@@ -1424,7 +1407,7 @@ hr {
   padding: 16px 0;
   text-align: left;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 .settings-actions > button > span:last-child,
 .settings-actions > a > span:last-child {
@@ -1434,7 +1417,7 @@ hr {
   border: 0;
   background: none;
   color: #a25650;
-  font-size: 11px;
+  font-size: 0.75rem;
   padding: 22px 0 0;
   text-decoration: underline;
 }
@@ -1452,12 +1435,12 @@ hr {
   min-width: 0;
 }
 .contact-row strong {
-  font-size: 12px;
+  font-size: 0.875rem;
   display: block;
 }
 .contact-row .muted {
   display: block;
-  font-size: 11px;
+  font-size: 0.75rem;
   overflow-wrap: anywhere;
   margin-bottom: 5px;
 }
@@ -1473,17 +1456,17 @@ hr {
 }
 .help-card h3 {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: 1.375rem;
   font-weight: 400;
   line-height: 1.4;
 }
 .help-card p {
-  font-size: 12px;
+  font-size: 0.875rem;
   line-height: 1.9;
   color: #6d6c5d;
 }
 .help-card .eyebrow {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: #625d45;
 }
 .help-links {
@@ -1495,7 +1478,7 @@ hr {
   display: flex;
   gap: 5px;
   align-items: center;
-  font-size: 11px;
+  font-size: 0.75rem;
   text-decoration: none;
   font-weight: 600;
 }
@@ -1508,18 +1491,18 @@ hr {
   align-items: flex-start;
   gap: 11px;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 0.875rem;
   line-height: 1.8;
 }
 .checkbox.small {
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .info-box {
   border: 1px solid #e1e7d9;
   background: #f2f5eb;
   padding: 14px 17px;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 0.875rem;
   line-height: 1.8;
   color: #5e7256;
   margin: 20px 0;
@@ -1529,7 +1512,7 @@ hr {
   color: #98483e;
   padding: 12px 15px;
   border-radius: 9px;
-  font-size: 12px;
+  font-size: 0.875rem;
   line-height: 1.7;
 }
 .success-message {
@@ -1539,7 +1522,7 @@ hr {
   padding: 13px 16px;
   display: flex;
   gap: 8px;
-  font-size: 12px;
+  font-size: 0.875rem;
   align-items: center;
 }
 .modal {
@@ -1571,7 +1554,7 @@ hr {
 .modal-head h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 27px;
+  font-size: 1.6875rem;
   line-height: 1.3;
   margin: 0;
 }
@@ -1579,7 +1562,7 @@ hr {
   margin: 20px -8px 22px;
 }
 .modal .muted {
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 .form-columns {
   display: grid;
@@ -1596,12 +1579,12 @@ hr {
   float: right;
   color: var(--muted);
   font-weight: 400;
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .range-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--muted);
   font-weight: 400;
 }
@@ -1612,10 +1595,10 @@ hr {
   border-radius: 10px;
   padding: 15px;
   margin: 16px 0;
-  color: #906c43;
+  color: #77562f;
 }
 .inline-support p {
-  font-size: 11px;
+  font-size: 0.75rem;
   margin: 0;
   line-height: 1.8;
 }
@@ -1626,11 +1609,11 @@ hr {
 .entry-success h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 27px;
+  font-size: 1.6875rem;
   margin: 20px 0 12px;
 }
 .entry-success > p {
-  font-size: 13px;
+  font-size: 0.875rem;
   max-width: 360px;
   margin: 0 auto 20px;
   color: var(--muted);
@@ -1653,10 +1636,10 @@ hr {
   margin: 20px 0;
 }
 .export-preview strong {
-  font-size: 16px;
+  font-size: 1rem;
 }
 .export-preview p {
-  font-size: 11px;
+  font-size: 0.75rem;
   margin: 5px 0 0;
   color: var(--muted);
 }
@@ -1665,7 +1648,7 @@ hr {
   padding: 20px 0 10px;
 }
 .activity-content > p {
-  font-size: 15px;
+  font-size: 1rem;
   line-height: 1.9;
   margin-bottom: 20px;
 }
@@ -1733,10 +1716,10 @@ hr {
   margin-bottom: 25px;
 }
 .onboard-card h1 {
-  font-size: 32px;
+  font-size: 2rem;
 }
 .onboard-card > .lead {
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 1.8;
 }
 .onboard-card label {
@@ -1751,7 +1734,7 @@ hr {
 .onboard-footer {
   text-align: center;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 0.75rem;
   margin: 24px;
 }
 .landing {
@@ -1766,7 +1749,7 @@ hr {
   padding: 35px 0;
 }
 .landing-header > a {
-  font-size: 11px;
+  font-size: 0.75rem;
   text-decoration: none;
   display: flex;
   gap: 8px;
@@ -1780,7 +1763,7 @@ hr {
   padding: 70px 0 90px;
 }
 .landing-badge {
-  font-size: 11px;
+  font-size: 0.75rem;
   letter-spacing: 1.6px;
   color: #566a4e;
   display: flex;
@@ -1795,7 +1778,7 @@ hr {
   border-radius: 50%;
 }
 .landing h1 {
-  font-size: 68px;
+  font-size: 4.25rem;
   line-height: 1.1;
   letter-spacing: -2.5px;
   margin-bottom: 27px;
@@ -1805,7 +1788,7 @@ hr {
   color: #718968;
 }
 .landing-lead {
-  font-size: 16px;
+  font-size: 1rem;
   color: #697361;
   max-width: 390px;
   line-height: 1.9;
@@ -1822,16 +1805,16 @@ hr {
 }
 .google-g {
   font-family: Arial;
-  font-size: 19px;
+  font-size: 1.1875rem;
   font-weight: 700;
 }
 .setup-note {
-  font-size: 12px;
+  font-size: 0.875rem;
   color: var(--muted);
   margin-bottom: 4px;
 }
 .landing-fine {
-  font-size: 11px;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -1853,7 +1836,7 @@ hr {
   align-items: center;
   color: #586e4c;
   margin-bottom: 40px;
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .preview-dot {
   width: 7px;
@@ -1863,11 +1846,11 @@ hr {
   margin-left: auto;
 }
 .landing-preview .eyebrow {
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 .landing-preview h2 {
   font-family: var(--serif);
-  font-size: 35px;
+  font-size: 2.1875rem;
   font-weight: 400;
   line-height: 1.23;
   margin-bottom: 28px;
@@ -1895,10 +1878,10 @@ hr {
   color: #809871;
 }
 .preview-message strong {
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 .preview-message p {
-  font-size: 11px;
+  font-size: 0.75rem;
   margin: 4px 0 0;
   color: #677960;
 }
@@ -1923,7 +1906,7 @@ hr {
   background: #8ba67c;
 }
 .preview-bars small {
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 .landing-features {
@@ -1938,16 +1921,16 @@ hr {
   margin-bottom: 15px;
 }
 .landing-features h3 {
-  font-size: 14px;
+  font-size: 1rem;
 }
 .landing-features p {
-  font-size: 12px;
+  font-size: 0.875rem;
   color: #6a7761;
   line-height: 1.8;
 }
 .landing > footer {
   border-top: 1px solid var(--line);
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--muted);
   padding: 24px 0 30px;
 }
@@ -1960,20 +1943,20 @@ hr {
   margin: 55px 0 16px;
 }
 .policy-page h1 {
-  font-size: 43px;
+  font-size: 2.6875rem;
   margin-bottom: 25px;
 }
 .policy-page .lead {
-  font-size: 16px;
+  font-size: 1rem;
 }
 .policy-page h2 {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: 1.625rem;
   font-weight: 400;
   margin: 35px 0 15px;
 }
 .policy-page p {
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 1.9;
   color: var(--muted);
 }
@@ -1992,14 +1975,14 @@ hr {
   margin-bottom: 35px;
 }
 .standalone-card h1 {
-  font-size: 33px;
+  font-size: 2.0625rem;
 }
 .standalone-card > a {
   display: block;
   margin-top: 25px;
 }
 .standalone-card p {
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 1.8;
 }
 @media (min-width: 1600px) {
@@ -2009,10 +1992,7 @@ hr {
   .dashboard-grid {
     grid-template-columns: 1.6fr 1fr;
   }
-  .gentle-art {
-    right: 6px;
-    width: 190px;
-  }
+
   .mood-card {
     padding: 30px;
   }
@@ -2026,7 +2006,7 @@ hr {
     padding: 34px;
   }
   .gentle-card h2 {
-    font-size: 36px;
+    font-size: 2.25rem;
   }
 }
 @media (max-width: 1200px) {
@@ -2056,26 +2036,22 @@ hr {
     padding: 22px 20px 15px;
   }
   .mood-card h2 {
-    font-size: 25px;
+    font-size: 1.5625rem;
   }
   .dashboard-moods .mood-option {
     padding: 7px 1px;
     gap: 10px;
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .gentle-card {
     padding: 25px 22px;
   }
   .gentle-card h2 {
-    font-size: 29px;
+    font-size: 1.8125rem;
   }
-  .gentle-art {
-    width: 145px;
-    right: -16px;
-    opacity: 0.65;
-  }
+
   .gentle-card > p {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .wellbeing-grid,
   .suggestion-grid {
@@ -2088,7 +2064,7 @@ hr {
   }
   .suggestion-time {
     right: 15px;
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .date-label {
     display: none;
@@ -2112,14 +2088,14 @@ hr {
     padding-left: 8px;
   }
   .brand {
-    font-size: 29px;
+    font-size: 1.8125rem;
   }
   .brand-mark {
     width: 38px;
     height: 38px;
   }
   .nav-item {
-    font-size: 11px;
+    font-size: 0.75rem;
     padding: 12px 11px;
     gap: 10px;
   }
@@ -2141,16 +2117,16 @@ hr {
     gap: 15px;
   }
   .section-heading h1 {
-    font-size: 32px;
+    font-size: 2rem;
   }
   .mood-card h2 {
-    font-size: 22px;
+    font-size: 1.375rem;
   }
   .mood-card .card-heading > .small {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .gentle-card h2 {
-    font-size: 26px;
+    font-size: 1.625rem;
   }
   .gentle-card {
     padding: 23px 18px;
@@ -2159,14 +2135,9 @@ hr {
   .gentle-card > p {
     max-width: 180px;
   }
-  .gentle-art {
-    width: 129px;
-    top: 0;
-    right: -26px;
-    opacity: 0.5;
-  }
+
   .gentle-link {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .daily-reminder {
     padding: 20px 16px;
@@ -2175,7 +2146,7 @@ hr {
     gap: 8px;
   }
   .next-routine strong {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .next-routine .tile-icon {
     width: 31px;
@@ -2186,13 +2157,13 @@ hr {
   }
   .chart-labels {
     width: 42px;
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .chart-footer > span {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .wellbeing-label {
-    font-size: 11px;
+    font-size: 0.75rem;
     gap: 7px;
   }
   .wellbeing-label .tile-icon {
@@ -2203,7 +2174,7 @@ hr {
     padding: 16px 14px;
   }
   .movement-caption {
-    font-size: 11px;
+    font-size: 0.75rem;
     line-height: 1.5;
   }
   .suggestion-card {
@@ -2213,7 +2184,7 @@ hr {
     position: static;
     display: block;
     margin-top: 12px;
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .suggestion-card h3 {
     margin-top: 8px;
@@ -2228,7 +2199,7 @@ hr {
     gap: 10px;
   }
   .history-summary .frequent-mood {
-    font-size: 13px;
+    font-size: 0.875rem;
   }
   .landing {
     padding: 0 35px;
@@ -2237,7 +2208,7 @@ hr {
     gap: 40px;
   }
   .landing h1 {
-    font-size: 58px;
+    font-size: 3.625rem;
   }
   .landing-preview {
     padding: 25px;
@@ -2248,7 +2219,7 @@ hr {
 }
 @media (max-width: 760px) {
   body {
-    font-size: 14px;
+    font-size: 1rem;
   }
   .sidebar {
     display: none;
@@ -2272,13 +2243,13 @@ hr {
     gap: 12px;
   }
   .sync-state {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .main-content {
-    padding: 5px 20px 100px;
+    padding: 5px 20px calc(112px + env(safe-area-inset-bottom));
   }
   .demo-banner {
-    font-size: 11px;
+    font-size: 0.75rem;
     margin: 0 0 25px;
     line-height: 1.6;
   }
@@ -2290,7 +2261,7 @@ hr {
     display: none;
   }
   .demo-banner > a {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .section-heading {
     margin: 17px 0 25px;
@@ -2298,17 +2269,17 @@ hr {
     gap: 15px;
   }
   .section-heading h1 {
-    font-size: 33px;
+    font-size: 2.0625rem;
   }
   .section-heading .eyebrow {
-    font-size: 11px;
+    font-size: 0.75rem;
     letter-spacing: 1.7px;
   }
   .section-heading p {
-    font-size: 12px;
+    font-size: 0.875rem;
   }
   .section-heading > .button {
-    font-size: 11px;
+    font-size: 0.75rem;
     padding: 8px 11px;
     min-height: 38px;
   }
@@ -2328,33 +2299,33 @@ hr {
     padding: 24px 22px 15px;
   }
   .mood-card h2 {
-    font-size: 28px;
+    font-size: 1.75rem;
     margin-top: 20px;
   }
   .mood-card > p {
-    font-size: 12px;
+    font-size: 0.875rem;
   }
   .dashboard-moods {
     margin: 22px -4px 23px;
   }
   .dashboard-moods .mood-option {
-    font-size: 11px;
+    font-size: 0.75rem;
     padding: 7px 3px;
   }
   .dashboard-moods svg {
     width: 57px;
   }
   .card-heading .eyebrow {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .mood-card .card-heading > .small {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .weekly-card {
     padding: 22px;
   }
   .weekly-card h2 {
-    font-size: 16px;
+    font-size: 1rem;
   }
   .mood-chart.chart-compact {
     height: 170px;
@@ -2362,45 +2333,41 @@ hr {
   }
   .chart-labels {
     width: 48px;
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .chart-bar {
     width: 21px;
   }
   .chart-date {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .chart-footer > span {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .gentle-card {
     min-height: 255px;
     padding: 23px 20px;
   }
   .gentle-card h2 {
-    font-size: 27px;
+    font-size: 1.6875rem;
   }
   .gentle-card > p {
-    font-size: 11px;
+    font-size: 0.75rem;
     max-width: 185px;
   }
-  .gentle-art {
-    width: 135px;
-    right: -25px;
-    opacity: 0.55;
-  }
+
   .gentle-link {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .gentle-card .eyebrow {
-    font-size: 11px;
+    font-size: 0.75rem;
     position: relative;
   }
   .daily-reminder {
     padding: 21px 17px;
   }
   .daily-reminder h2 {
-    font-size: 12px;
+    font-size: 0.875rem;
     gap: 6px;
   }
   .daily-reminder h2 svg {
@@ -2412,7 +2379,7 @@ hr {
     margin: 15px 0;
   }
   .next-routine strong {
-    font-size: 11px;
+    font-size: 0.75rem;
     line-height: 1.6;
   }
   .next-routine .tile-icon {
@@ -2420,23 +2387,23 @@ hr {
     height: 38px;
   }
   .next-routine p {
-    font-size: 11px;
+    font-size: 0.75rem;
     margin-top: 5px;
   }
   .daily-reminder > .text-button {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .subsection-heading {
     margin-top: 28px;
   }
   .subsection-heading h2 {
-    font-size: 16px;
+    font-size: 1rem;
   }
   .subsection-heading p {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .subsection-heading > .text-button {
-    font-size: 11px;
+    font-size: 0.75rem;
     white-space: nowrap;
   }
   .wellbeing-grid {
@@ -2448,7 +2415,7 @@ hr {
   .wellbeing-label {
     display: grid;
     grid-template-columns: 1fr auto;
-    font-size: 11px;
+    font-size: 0.75rem;
     gap: 9px;
     margin-bottom: 15px;
   }
@@ -2463,14 +2430,14 @@ hr {
     width: 14px;
   }
   .wellbeing-card > strong {
-    font-size: 23px;
+    font-size: 1.4375rem;
   }
   .wellbeing-card > strong small {
-    font-size: 11px;
+    font-size: 0.75rem;
     white-space: nowrap;
   }
   .wellbeing-card > .small {
-    font-size: 11px;
+    font-size: 0.75rem;
     line-height: 1.6;
     min-height: 28px;
   }
@@ -2482,7 +2449,7 @@ hr {
     height: 16px;
   }
   .movement-caption {
-    font-size: 11px;
+    font-size: 0.75rem;
     gap: 3px;
     height: 23px;
     margin-top: 16px;
@@ -2490,10 +2457,7 @@ hr {
   .movement-caption svg {
     width: 11px;
   }
-  .sleep-wave {
-    margin-top: 10px;
-    height: 28px;
-  }
+
   .suggestion-grid {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -2513,30 +2477,30 @@ hr {
     grid-column: 2;
     grid-row: 1;
     margin: 0 0 5px;
-    font-size: 12px;
+    font-size: 0.875rem;
   }
   .suggestion-card p {
     grid-column: 2;
     grid-row: 2;
     margin: 0;
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .suggestion-time {
     grid-column: 2;
     grid-row: 3;
     margin: 7px 0 0;
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .suggestion-arrow {
     grid-column: 3;
     grid-row: 1/4;
   }
   .personalized-label {
-    font-size: 11px;
+    font-size: 0.75rem;
     white-space: nowrap;
   }
   .dashboard-footer {
-    font-size: 11px;
+    font-size: 0.75rem;
     line-height: 1.7;
     text-align: center;
   }
@@ -2569,7 +2533,7 @@ hr {
     border-radius: 15px;
     padding: 8px 3px;
     color: #5b6c51;
-    font-size: 11px;
+    font-size: 0.75rem;
     min-height: 55px;
   }
   .mobile-nav > button.active {
@@ -2588,13 +2552,13 @@ hr {
     justify-content: space-between;
   }
   .history-summary strong {
-    font-size: 25px;
+    font-size: 1.5625rem;
   }
   .history-summary .frequent-mood {
-    font-size: 15px;
+    font-size: 1rem;
   }
   .history-summary > .small {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .history-controls {
     gap: 15px;
@@ -2614,10 +2578,10 @@ hr {
     gap: 4px;
   }
   .mood-distribution span {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .mood-distribution strong {
-    font-size: 13px;
+    font-size: 0.875rem;
   }
   .mood-chart {
     gap: 10px;
@@ -2626,7 +2590,7 @@ hr {
     gap: 3px;
   }
   .history-summary .small {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .settings-grid {
     gap: 0;
@@ -2635,30 +2599,30 @@ hr {
     padding: 24px 21px;
   }
   .settings-grid .card-heading h2 {
-    font-size: 16px;
+    font-size: 1rem;
   }
   .settings-actions > a,
   .settings-actions > button {
-    font-size: 12px;
+    font-size: 0.875rem;
   }
   .routine-title {
     gap: 9px;
   }
   .routine-title strong {
-    font-size: 12px;
+    font-size: 0.875rem;
   }
   .routine-title > .text-button {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .routine-slots {
     margin-left: 0;
   }
   .routine-slots .button {
-    font-size: 11px;
+    font-size: 0.75rem;
     padding: 6px 10px;
   }
   .routine-slots .text-button {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .appointment-item {
     gap: 10px;
@@ -2668,17 +2632,17 @@ hr {
     height: 33px;
   }
   .appointment-item h3 {
-    font-size: 13px;
+    font-size: 0.875rem;
   }
   .appointment-item p {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .calendar-actions {
     gap: 8px;
     flex-direction: column;
   }
   .calendar-actions .text-button {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .modal {
     padding: 23px 22px;
@@ -2686,10 +2650,10 @@ hr {
     border-radius: 19px;
   }
   .modal-head h2 {
-    font-size: 25px;
+    font-size: 1.5625rem;
   }
   .modal .mood-option {
-    font-size: 11px;
+    font-size: 0.75rem;
     gap: 8px;
     padding: 8px 1px;
   }
@@ -2700,7 +2664,7 @@ hr {
     gap: 12px;
   }
   .form-columns input {
-    font-size: 12px;
+    font-size: 0.875rem;
     padding: 11px 8px !important;
   }
   .onboarding {
@@ -2713,13 +2677,13 @@ hr {
     margin-bottom: 30px;
   }
   .onboard-card h1 {
-    font-size: 31px;
+    font-size: 1.9375rem;
   }
   .onboard-card .eyebrow {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .onboard-card > .lead {
-    font-size: 13px;
+    font-size: 0.875rem;
   }
   .landing {
     padding: 0 24px;
@@ -2728,7 +2692,7 @@ hr {
     padding: 28px 0;
   }
   .landing-header > a {
-    font-size: 11px;
+    font-size: 0.75rem;
     max-width: 140px;
   }
   .landing-header > a svg {
@@ -2740,21 +2704,21 @@ hr {
     padding: 38px 0 50px;
   }
   .landing h1 {
-    font-size: 61px;
+    font-size: 3.8125rem;
   }
   .landing-lead {
-    font-size: 15px;
+    font-size: 1rem;
     max-width: 350px;
   }
   .landing-badge {
-    font-size: 11px;
+    font-size: 0.75rem;
     margin-bottom: 22px;
   }
   .landing-cta {
     max-width: 100%;
   }
   .landing-fine {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .landing-preview {
     max-width: 400px;
@@ -2778,37 +2742,37 @@ hr {
     width: 20px;
   }
   .landing-features h3 {
-    font-size: 14px;
+    font-size: 1rem;
   }
   .landing-features p {
-    font-size: 12px;
+    font-size: 0.875rem;
     margin-bottom: 0;
   }
   .landing > footer {
-    font-size: 11px;
+    font-size: 0.75rem;
     line-height: 1.9;
   }
   .policy-page {
     padding: 30px 24px 50px;
   }
   .policy-page h1 {
-    font-size: 35px;
+    font-size: 2.1875rem;
   }
   .policy-page .lead {
-    font-size: 14px;
+    font-size: 1rem;
   }
   .policy-page h2 {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
   .policy-page p {
-    font-size: 13px;
+    font-size: 0.875rem;
   }
   .standalone-card {
     margin: 25px 18px;
     padding: 28px 24px;
   }
   .standalone-card h1 {
-    font-size: 30px;
+    font-size: 1.875rem;
   }
 }
 @media (max-width: 380px) {
@@ -2820,16 +2784,16 @@ hr {
     padding: 0 17px;
   }
   .section-heading h1 {
-    font-size: 29px;
+    font-size: 1.8125rem;
   }
   .mood-card {
     padding: 21px 17px 14px;
   }
   .mood-card h2 {
-    font-size: 25px;
+    font-size: 1.5625rem;
   }
   .dashboard-moods .mood-option {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .dashboard-secondary {
     grid-template-columns: 1fr;
@@ -2837,13 +2801,9 @@ hr {
   .gentle-card {
     min-height: 260px;
   }
-  .gentle-art {
-    width: 180px;
-    right: 0;
-    opacity: 0.7;
-  }
+
   .gentle-card h2 {
-    font-size: 31px;
+    font-size: 1.9375rem;
   }
   .daily-reminder .next-routine {
     flex-direction: row;
@@ -2853,13 +2813,13 @@ hr {
     padding: 13px 10px;
   }
   .wellbeing-card > strong {
-    font-size: 21px;
+    font-size: 1.3125rem;
   }
   .movement-caption {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .dashboard-footer {
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .form-columns {
     grid-template-columns: 1fr;
@@ -2873,16 +2833,7 @@ hr {
     right: 14px;
   }
   .brand-small {
-    font-size: 25px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
+    font-size: 1.5625rem;
   }
 }
 @media print {
@@ -2933,26 +2884,21 @@ hr {
     padding: 26px;
   }
   .gentle-card h2 {
-    font-size: 31px;
+    font-size: 1.9375rem;
     max-width: 230px;
   }
   .gentle-card > p {
     max-width: 260px;
   }
-  .gentle-art {
-    width: 160px;
-    right: -7px;
-    top: 5px;
-    opacity: 0.6;
-  }
+
   .gentle-link {
-    font-size: 12px;
+    font-size: 0.875rem;
   }
   .daily-reminder {
     padding: 23px;
   }
   .daily-reminder h2 {
-    font-size: 15px;
+    font-size: 1rem;
   }
   .next-routine {
     flex-direction: row;
@@ -2961,7 +2907,7 @@ hr {
     margin: 20px 0;
   }
   .next-routine strong {
-    font-size: 13px;
+    font-size: 0.875rem;
   }
   .wellbeing-grid {
     grid-template-columns: 1fr;
@@ -2976,7 +2922,7 @@ hr {
     display: flex;
     grid-column: 1;
     grid-row: 1;
-    font-size: 13px;
+    font-size: 0.875rem;
     margin: 0;
     gap: 10px;
   }
@@ -2992,29 +2938,700 @@ hr {
     grid-row: 1;
     margin: 0;
     align-self: center;
-    font-size: 26px;
+    font-size: 1.625rem;
   }
   .wellbeing-card > strong small {
-    font-size: 12px;
+    font-size: 0.875rem;
   }
   .wellbeing-card > .small {
     grid-column: 1/-1;
     grid-row: 2;
     min-height: 0;
     margin: 10px 0 0;
-    font-size: 12px;
+    font-size: 0.875rem;
   }
   .water-progress,
-  .sleep-wave,
   .movement-caption {
     grid-column: 1/-1;
     grid-row: 3;
     width: 100%;
     margin-top: 13px;
     height: 23px;
-    font-size: 11px;
+    font-size: 0.75rem;
   }
   .movement-caption svg {
     width: 15px;
   }
+}
+
+/* Shared interaction rules: 48 CSS-pixel targets, visible focus and no blocked zoom. */
+button,
+.button,
+.text-button,
+.icon-button,
+select,
+summary,
+input:not([type='checkbox']):not([type='range']) {
+  min-height: 48px;
+}
+button,
+.button,
+.icon-button {
+  min-width: 48px;
+}
+button,
+a,
+summary {
+  touch-action: manipulation;
+}
+.icon-button {
+  width: 48px;
+  height: 48px;
+}
+input:not([type='checkbox']),
+select,
+textarea {
+  font-size: 1rem;
+}
+input[type='range'] {
+  min-height: 48px;
+}
+.checkbox {
+  min-height: 48px;
+  align-items: center;
+  padding: 8px 0;
+}
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline-color: #355f4e;
+}
+.main-content:focus {
+  outline: none;
+}
+html {
+  scroll-padding-bottom: 120px;
+}
+.mood-card {
+  padding: 30px 28px 18px;
+  border-color: #c4d5c6;
+  box-shadow: 0 5px 24px #294d3f08;
+}
+.mood-card h2 {
+  font-size: 2.15rem;
+  margin: 18px 0 8px;
+}
+.mood-card > p {
+  font-size: 1rem;
+}
+.dashboard-moods {
+  margin: 26px 0;
+  gap: 10px;
+}
+.dashboard-moods .mood-option {
+  font-size: 0.875rem;
+  color: var(--ink);
+  font-weight: 500;
+  min-height: 126px;
+  border-color: #e1e7dc;
+  padding: 15px 5px 12px;
+}
+.mood-option:active {
+  background: #eaf0e4;
+  transform: scale(0.98);
+}
+.mood-chevron {
+  display: none;
+}
+.gentle-card {
+  min-height: 270px;
+}
+.gentle-card blockquote {
+  position: relative;
+  z-index: 1;
+  margin: 18px 0;
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  line-height: 1.4;
+  max-width: 28ch;
+  text-wrap: pretty;
+}
+.gentle-card .daily-words-credit {
+  font-size: 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.daily-fact h2 {
+  font-size: 1.125rem;
+}
+.daily-fact p {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+.fact-source {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  min-height: 48px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+.notification-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bg);
+  padding: 16px;
+  margin: 18px 0;
+}
+.notification-preview p {
+  margin: 4px 0 0;
+  font-size: 0.9375rem;
+}
+.modal {
+  overscroll-behavior: contain;
+}
+.modal-head {
+  position: sticky;
+  top: -28px;
+  background: white;
+  z-index: 2;
+  padding: 12px 0;
+}
+.modal-head .icon-button {
+  flex-shrink: 0;
+}
+.mood-option.selected {
+  border-width: 2px;
+  box-shadow: inset 0 0 0 1px #54755b;
+}
+@media (hover: none) {
+  .mood-option:hover {
+    transform: none;
+  }
+}
+@media (max-width: 760px) {
+  .topbar {
+    height: auto;
+    min-height: 64px;
+    padding: calc(8px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 8px
+      max(16px, env(safe-area-inset-left));
+  }
+  .main-content {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  .demo-banner {
+    margin-bottom: 12px;
+    font-size: 0.75rem;
+    gap: 8px;
+  }
+  .demo-banner > a {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .dashboard-heading {
+    margin: 12px 0 20px;
+  }
+  .dashboard-heading .eyebrow {
+    display: none;
+  }
+  .dashboard-heading h1 {
+    font-size: 1.8rem;
+    letter-spacing: -0.6px;
+  }
+  .dashboard-heading p {
+    font-size: 0.9375rem;
+    margin-bottom: 0;
+  }
+  .mood-card {
+    padding: 22px 18px 12px;
+    border-radius: 24px;
+  }
+  .mood-card h2 {
+    font-size: 1.9rem;
+    line-height: 1.2;
+    margin: 16px 0 8px;
+  }
+  .mood-card > p {
+    font-size: 0.9375rem;
+  }
+  .mood-card .card-heading {
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 0;
+  }
+  .mood-card .card-heading > .small {
+    font-size: 0.75rem;
+  }
+  .mood-card .eyebrow {
+    font-size: 0.6875rem;
+    letter-spacing: 1px;
+  }
+  .dashboard-moods {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 20px 0 12px;
+  }
+  .dashboard-moods .mood-option {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 16px;
+    min-height: 64px;
+    width: 100%;
+    padding: 7px 14px;
+    font-size: 1rem;
+    border-radius: 16px;
+    background: #fdfefa;
+  }
+  .dashboard-moods .mood-option svg:not(.mood-chevron) {
+    width: 48px;
+    height: 48px;
+  }
+  .dashboard-moods .mood-chevron {
+    display: block;
+    width: 18px;
+    margin-left: auto;
+    color: #697669;
+  }
+  .mood-card-footer {
+    gap: 8px;
+    padding-top: 6px;
+    flex-wrap: wrap;
+  }
+  .mood-card-footer > span {
+    font-size: 0.75rem;
+  }
+  .mood-card-footer .text-button {
+    font-size: 0.8125rem;
+  }
+  .gentle-card blockquote {
+    font-size: 1.8rem;
+  }
+
+  .mobile-nav {
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    gap: 4px;
+    padding: 6px;
+  }
+  .mobile-nav > button {
+    min-height: 60px;
+    font-size: 0.75rem;
+  }
+  .mobile-nav > button svg {
+    width: 24px;
+    height: 24px;
+  }
+  .modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - env(safe-area-inset-top) - 12px);
+    margin: auto 0 0;
+    padding: 12px max(20px, env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom))
+      max(20px, env(safe-area-inset-left));
+    border-radius: 24px 24px 0 0;
+  }
+  .modal-head {
+    top: -12px;
+    padding: 12px 0;
+    gap: 12px;
+  }
+  .modal-head h2 {
+    font-size: 1.6rem;
+  }
+  .modal .mood-options {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 18px 0;
+  }
+  .modal .mood-option {
+    flex: 1 1 80px;
+    min-width: 72px;
+    min-height: 100px;
+    font-size: 0.875rem;
+    padding: 10px 4px;
+    border-color: #d4dcd2;
+  }
+  .modal .mood-option svg {
+    width: 48px;
+  }
+  .form-columns input {
+    font-size: 1rem;
+  }
+  .section-heading > .button,
+  .routine-slots .button {
+    min-height: 48px;
+  }
+  .subsection-heading {
+    flex-wrap: wrap;
+  }
+  .history-controls,
+  .card-heading,
+  .routine-title,
+  .button-row {
+    flex-wrap: wrap;
+  }
+  .settings-grid .card,
+  .daily-fact {
+    overflow-wrap: anywhere;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* Reflow enlarged text instead of clipping it or hiding horizontal overflow. */
+@media (max-width: 760px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .topbar-actions {
+    margin-left: auto;
+  }
+  .main-content {
+    padding-bottom: calc(7.5rem + env(safe-area-inset-bottom));
+  }
+  .dashboard-grid,
+  .dashboard-secondary,
+  .wellbeing-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dashboard-primary,
+  .dashboard-secondary,
+  .card-heading > div,
+  .card,
+  .chart-body,
+  .chart-column {
+    min-width: 0;
+  }
+  .card,
+  .gentle-card,
+  .suggestion-card,
+  .section-heading {
+    overflow-wrap: anywhere;
+  }
+  .card-heading h2,
+  .weekly-value,
+  .chart-footer,
+  .next-routine {
+    flex-wrap: wrap;
+  }
+  .card-heading p {
+    white-space: normal;
+  }
+  .chart-labels {
+    width: 4.5rem;
+  }
+  .mood-chart.chart-compact {
+    height: 12rem;
+  }
+  .chart-date {
+    overflow-wrap: anywhere;
+  }
+  .wellbeing-card {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .wellbeing-label {
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .mobile-nav > button {
+    min-width: 48px;
+    flex-basis: 0;
+  }
+  .mobile-nav > button span {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  .mobile-nav {
+    max-width: calc(100% - 24px);
+  }
+  .modal-head h2 {
+    overflow-wrap: anywhere;
+  }
+}
+
+/* Impeccable polish: calm hierarchy, progressive disclosure and dependable forms. */
+html {
+  scrollbar-gutter: stable;
+}
+::selection {
+  background: #d9e6d4;
+  color: var(--ink);
+}
+input,
+textarea {
+  caret-color: var(--green);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+.weekly-value strong,
+.wellbeing-card > strong,
+.history-summary strong,
+.date-label {
+  font-variant-numeric: tabular-nums;
+}
+.mood-card {
+  box-shadow: none;
+  border-radius: var(--radius-panel);
+}
+.mood-card h2 {
+  margin-top: 0;
+}
+.mood-card-footer {
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+.mood-count {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.daily-basics .subsection-heading {
+  margin-top: var(--space-sm);
+}
+.daily-basics .wellbeing-grid {
+  gap: 12px;
+}
+.daily-basics .wellbeing-card {
+  padding: 18px 16px;
+  box-shadow: none;
+}
+.daily-basics .wellbeing-label {
+  flex-wrap: wrap;
+}
+.gentle-card {
+  min-height: 0;
+  flex: initial;
+}
+.gentle-card .daily-content-label {
+  font: 600 1rem/1.4 var(--sans);
+  letter-spacing: normal;
+  margin-bottom: var(--space-md);
+}
+.gentle-card blockquote {
+  margin: var(--space-md) 0;
+}
+.daily-fact h3 {
+  font-size: 1rem;
+  margin: var(--space-md) 0 var(--space-sm);
+}
+.suggestion-grid {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+.suggestion-card {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--space-md);
+  padding: 22px 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+}
+.suggestion-card:hover {
+  background: var(--sage);
+  border-color: var(--line);
+}
+.suggestion-card > .tile-icon {
+  grid-column: 1;
+  grid-row: 1 / 4;
+  background: transparent;
+}
+.suggestion-card h3 {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0 0 5px;
+}
+.suggestion-card p {
+  grid-column: 2;
+  grid-row: 2;
+  max-width: 65ch;
+  margin: 0;
+}
+.suggestion-card .suggestion-time {
+  position: static;
+  grid-column: 2;
+  grid-row: 3;
+  margin: 6px 0 0;
+}
+.suggestion-card .suggestion-arrow {
+  grid-column: 3;
+  grid-row: 1 / 4;
+  position: static;
+}
+.selected-mood-summary {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: var(--space-md);
+  padding: 12px 16px;
+  border: 1px solid #bacdbc;
+  border-radius: var(--radius-control);
+  background: #f6f8f2;
+  text-align: left;
+}
+.selected-mood-summary > span:first-of-type {
+  display: grid;
+}
+.selected-mood-summary small {
+  font-size: 0.875rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+.selected-mood-summary strong {
+  font-size: 1.25rem;
+}
+.change-mood {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: var(--green);
+}
+.selected-mood-summary:hover {
+  background: var(--sage);
+}
+.entry-details {
+  border-block: 1px solid var(--line);
+  margin: var(--space-lg) 0;
+}
+.entry-details > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding: 12px 0;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.entry-details > summary::-webkit-details-marker {
+  display: none;
+}
+.entry-details > summary > svg {
+  margin-left: auto;
+}
+.entry-details[open] > summary > svg {
+  transform: rotate(180deg);
+}
+.entry-details[open] > summary {
+  margin-bottom: var(--space-md);
+}
+.entry-details fieldset {
+  margin-top: var(--space-sm);
+}
+.entry-actions {
+  position: sticky;
+  bottom: -28px;
+  padding: 16px 0;
+  background: var(--paper);
+  z-index: 1;
+}
+.mood-entry-form > .muted {
+  font-size: 1rem;
+}
+.mood-entry-form .mood-fieldset[hidden] {
+  display: none;
+}
+.entry-success h3:focus {
+  outline: none;
+}
+.discard-confirmation p {
+  max-width: 55ch;
+}
+.discard-confirmation .button-row {
+  margin-top: var(--space-lg);
+}
+@media (max-width: 760px) {
+  .mood-card {
+    border-radius: var(--radius-panel);
+  }
+  .mood-card h2 {
+    font-size: 1.75rem;
+  }
+  .mood-card-footer {
+    padding-top: 12px;
+  }
+  .mood-card-footer > span {
+    font-size: 0.75rem;
+  }
+  .daily-basics .subsection-heading {
+    margin-top: var(--space-sm);
+  }
+  .daily-basics .wellbeing-card {
+    padding: 16px;
+  }
+  .suggestion-card {
+    padding-inline: 4px;
+  }
+  .suggestion-card h3 {
+    font-size: 1rem;
+  }
+  .suggestion-card p,
+  .suggestion-card .suggestion-time {
+    font-size: 0.875rem;
+  }
+  .modal {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+  .entry-actions {
+    bottom: calc(-16px - env(safe-area-inset-bottom));
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+  .mood-entry-form .mood-options {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .mood-entry-form .mood-option {
+    flex-direction: row;
+    justify-content: flex-start;
+    min-height: 64px;
+    padding: 8px 16px;
+    gap: 16px;
+  }
+  .selected-mood-summary {
+    padding: 12px;
+    gap: 10px;
+  }
+  .selected-mood-summary > svg {
+    width: 52px;
+    height: 52px;
+  }
+  .selected-mood-summary > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .modal .entry-success > p {
+    font-size: 1rem;
+  }
+}
+.form-fields {
+  margin: 0;
+}
+.form-fields:disabled {
+  opacity: 0.8;
 }

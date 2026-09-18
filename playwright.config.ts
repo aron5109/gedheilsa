@@ -6,10 +6,6 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: 'list',
   use: {
-    launchOptions: {
-      executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
-      args: ['--no-sandbox', '--disable-dev-shm-usage'],
-    },
     baseURL: 'http://127.0.0.1:3000',
     trace: 'retain-on-failure',
   },
@@ -19,5 +15,17 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
+          args: ['--no-sandbox', '--disable-dev-shm-usage'],
+        },
+      },
+    },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+  ],
 });

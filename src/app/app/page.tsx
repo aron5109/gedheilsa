@@ -1,19 +1,28 @@
 import { redirect } from 'next/navigation';
-import { configured, userClient } from '@/lib/supabase/server';
+import { configured, currentUser } from '@/lib/neon/auth';
+import { userDatabase } from '@/lib/neon/database';
 import { loadData } from '@/lib/server/data';
 import { emailReady } from '@/lib/server/mail';
 import { AppShell } from '@/components/app-shell';
+import { actionFromQuery } from '@/lib/domain/notifications';
 export const dynamic = 'force-dynamic';
-export default async function AppPage() {
+// AppShell owns the reactive screen title, including fragment navigation.
+export const metadata = { title: null };
+export default async function AppPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ skra?: string; sida?: string }>;
+}) {
   if (!configured()) redirect('/?uppsetning=1');
-  const db = await userClient();
-  const { data, error } = await db.auth.getUser();
-  if (error || !data.user) redirect('/');
-  const initialData = await loadData(db, data.user.id);
+  const user = await currentUser();
+  if (!user) redirect('/');
+  const initialData = await loadData(userDatabase(user.id), user.id);
   return (
     <AppShell
       initialData={initialData}
-      owner={data.user.id}
+      owner={user.id}
+      initialNow={new Date().toISOString()}
+      initialAction={actionFromQuery(await searchParams)}
       emailReady={emailReady()}
       pushReady={Boolean(
         process.env.VAPID_PRIVATE_KEY &&

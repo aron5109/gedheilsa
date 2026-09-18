@@ -6,6 +6,7 @@ export default defineConfig([
   ...nextTs,
   globalIgnores([
     '.next/**',
+    '.agents/skills/impeccable/**',
     'node_modules/**',
     'test-results/**',
     'playwright-report/**',

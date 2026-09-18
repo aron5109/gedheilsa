@@ -7,6 +7,7 @@ export type Profile = {
   interests: string[];
   comfort_activities: string[];
   water_goal_ml: number;
+  personal_notifications: boolean;
   support_enabled: boolean;
   support_days: number;
   consent_at: string | null;

@@ -1,5 +1,11 @@
 'use client';
-import { formatDate, formatNumber, shortWeekday } from '@/lib/domain/format';
+import {
+  formatDate,
+  formatNumber,
+  shortWeekday,
+  registrationCount,
+  isSingular,
+} from '@/lib/domain/format';
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Download, ArrowUpRight } from 'lucide-react';
 import { MOODS, dayKey, addDays, filterMoods, dailyMoods } from '@/lib/domain/mood';
@@ -40,7 +46,7 @@ export function MoodChart({
           aria-label={days
             .map(
               (d) =>
-                `${d.date}: ${d.count ? `${d.average === null ? '—' : formatNumber(d.average)} af 5, ${d.count} skráningar` : 'engin skráning'}`,
+                `${d.date}: ${d.count ? `${d.average === null ? '—' : formatNumber(d.average)} af 5, ${registrationCount(d.count)}` : 'engin skráning'}`,
             )
             .join('. ')}
         >
@@ -95,11 +101,13 @@ export function History({
   timezone,
   pendingIds,
   onShare,
+  onAdd,
 }: {
   entries: MoodEntry[];
   timezone: string;
   pendingIds: string[];
   onShare: () => void;
+  onAdd: () => void;
 }) {
   const [mode, setMode] = useState<'day' | 'week' | 'month'>('week'),
     [anchor, setAnchor] = useState(() => dayKey(new Date(), timezone)),
@@ -122,7 +130,6 @@ export function History({
     <>
       <div className="section-heading">
         <div>
-          <span className="eyebrow">LÍÐAN YFIR TÍMA</span>
           <h1>Dagarnir þínir.</h1>
           <p className="muted">Lítið yfirlit getur hjálpað þér að sjá stærri myndina.</p>
         </div>
@@ -169,7 +176,7 @@ export function History({
             <span className="muted small">Skráningar á tímabilinu</span>
             <strong>
               {selected.length}
-              <small> {selected.length === 1 ? 'skráning' : 'skráningar'}</small>
+              <small> {isSingular(selected.length) ? 'skráning' : 'skráningar'}</small>
             </strong>
           </div>
           <div>
@@ -199,6 +206,11 @@ export function History({
           <Empty title="Hér fær líðanin þín pláss.">
             Engin líðan hefur verið skráð á þessu tímabili.
           </Empty>
+        )}
+        {!selected.length && (
+          <button className="button" onClick={onAdd}>
+            Skrá líðan
+          </button>
         )}
         <p className="chart-note">
           Súlur sýna meðaltal hvers dags. Punktur merkir að skráningu vantar. Meðaltöl eru lýsandi

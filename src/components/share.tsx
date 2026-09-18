@@ -1,4 +1,5 @@
 'use client';
+import { registrationCount } from '@/lib/domain/format';
 import { useState, type FormEvent } from 'react';
 import { Download, Mail, Check, ShieldCheck } from 'lucide-react';
 import { Modal, ErrorMessage } from './ui';
@@ -107,7 +108,7 @@ export function Share({
       <div className="export-preview">
         <ShieldCheck size={24} />
         <div>
-          <strong>{selected.length} skráningar</strong>
+          <strong>{registrationCount(selected.length)}</strong>
           <p>
             Líðan, orka, tilfinningar og tímastimplar
             {notes ? ' ásamt dagbókartexta.' : '. Dagbókartexti fylgir ekki.'}
@@ -151,15 +152,15 @@ export function Share({
           />
           <span>
             Ég hef yfirfarið netfangið <strong>{email || 'hér að ofan'}</strong> og samþykki að
-            senda þessar {selected.length} skráningar til þess. Ég skil að viðtakandinn getur
-            varðveitt og áframsent afritið.
+            senda valdar skráningar á það. Ég skil að viðtakandinn getur varðveitt og áframsent
+            afritið.
           </span>
         </label>
         {(!emailReady || demo) && (
           <p className="info-box">
             {demo
               ? 'Sýnishornið sendir engan tölvupóst.'
-              : 'Tölvupóstþjónusta hefur ekki verið tengd. Þú getur sótt skrána og sent hana sjálf/ur.'}
+              : 'Tölvupóstþjónusta hefur ekki verið tengd. Þú getur sótt skrána og deilt henni að eigin vali.'}
           </p>
         )}
         <ErrorMessage message={error} />

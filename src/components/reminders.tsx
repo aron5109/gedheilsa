@@ -196,7 +196,7 @@ export function Reminders({
         )}
         <p className="footnote">
           Skráning staðfestir aðeins það sem þú velur. Hlýja leggur ekki til skammta eða breytingar
-          á lyfjum. Leitaðu til læknis eða lyfjafræðings ef þú ert óviss um gleymdan skammt.
+          á lyfjum. Leitaðu til læknis eða lyfjafræðings ef þú ert í vafa um gleymdan skammt.
         </p>
       </section>
       <section className="card">

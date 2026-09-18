@@ -1,5 +1,7 @@
-import { guard, json, failure, body, check, HttpError } from '@/lib/server/http';
+import { guard, json, failure, body, HttpError } from '@/lib/server/http';
 import { moodSchema, wellbeingSchema } from '@/lib/domain/validation';
+import { insert } from '@/lib/neon/repository';
+import { isConflict } from '@/lib/neon/database';
 import { z } from 'zod';
 export async function POST(request: Request) {
   try {
@@ -12,15 +14,17 @@ export async function POST(request: Request) {
       ]),
     );
     const table = input.kind === 'mood' ? 'mood_entries' : 'wellbeing_entries';
-    const { error } = await db.from(table).insert({ ...input.payload, user_id: user.id });
-    if (error && error.code !== '23505') check(error);
-    const { data, error: readError } = await db
-      .from(table)
-      .select('*')
-      .eq('id', input.payload.id)
-      .eq('user_id', user.id)
-      .maybeSingle();
-    check(readError);
+    let replay = false;
+    try {
+      await insert(db, table, { ...input.payload, user_id: user.id });
+    } catch (error) {
+      if (!isConflict(error)) throw error;
+      replay = true;
+    }
+    const [data] = await db.query<Record<string, unknown> & { occurred_at: string }>(
+      `select * from hlyja.${table} where id=$1 and user_id=$2`,
+      [input.payload.id, user.id],
+    );
     if (!data)
       throw new HttpError(409, 'Auðkenni færslunnar rekst á aðra færslu. Færslan er enn í bið.');
     const { occurred_at, ...rest } = input.payload;
@@ -30,7 +34,7 @@ export async function POST(request: Request) {
     );
     if (!sameTime || !same)
       throw new HttpError(409, 'Færslan hefur annað innihald. Færslan er enn í bið.');
-    return json(data, error ? 200 : 201);
+    return json(data, replay ? 200 : 201);
   } catch (e) {
     return failure(e);
   }

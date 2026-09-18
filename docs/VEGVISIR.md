@@ -2,7 +2,7 @@
 
 ## Næst: tengja fyrstu útgáfu
 
-- Stilla Supabase, Google OAuth, hýsingu, Resend, VAPID og cron samkvæmt uppsetningarleiðbeiningum.
+- Stilla Neon, Google OAuth, hýsingu, Resend, VAPID og cron samkvæmt uppsetningarleiðbeiningum.
 - Yfirfara ábyrgð, samþykki, aðgengi, varðveislu og stuðningsreglu áður en raunverulegur prófunarhópur byrjar.
 - Prófa raunveruleg tæki, afhendingu tölvupósts og leyfisflæði á iOS/Android.
 
