@@ -1,14 +1,14 @@
 import 'server-only';
 import { randomBytes, createHash } from 'node:crypto';
 import webpush from 'web-push';
-import { adminClient } from '@/lib/supabase/server';
-import { check } from './http';
+import { workerDatabase } from '@/lib/neon/database';
+import { insert } from '@/lib/neon/repository';
 import { sendEmail, emailReady } from './mail';
 import { allRows } from './data';
 import { dayKey, localTime, supportSignal } from '@/lib/domain/mood';
 import { pushSchema } from '@/lib/domain/validation';
 import { reminderMessage, type ReminderKind } from '@/lib/domain/notifications';
-import type { Profile, MoodEntry, Routine, Appointment } from '@/lib/domain/types';
+import type { Profile, MoodEntry, Routine, Appointment, Contact } from '@/lib/domain/types';
 type Job = {
   id: string;
   user_id: string;
@@ -19,18 +19,16 @@ type Job = {
   created_at: string;
 };
 export async function runScheduler(now = new Date()) {
-  const db = adminClient();
+  const db = workerDatabase();
   let users = 0,
     delivered = 0,
     failed = 0;
   // Bounded deployment: pagination avoids the default 1,000-user silent truncation.
   for (let offset = 0; ; offset += 200) {
-    const { data: profiles, error } = await db
-      .from('profiles')
-      .select('*')
-      .order('id')
-      .range(offset, offset + 199);
-    check(error);
+    const profiles = await db.query<Profile>(
+      'select * from hlyja.profiles order by id limit 200 offset $1',
+      [offset],
+    );
     if (!profiles?.length) break;
     for (const profile of profiles as Profile[]) {
       users++;
@@ -42,7 +40,9 @@ export async function runScheduler(now = new Date()) {
         contactId: string | null = null,
         ttl = 1800000,
       ) => {
-        const { error } = await db.from('notification_jobs').upsert(
+        await insert(
+          db,
+          'notification_jobs',
           {
             user_id: profile.id,
             contact_id: contactId,
@@ -51,9 +51,8 @@ export async function runScheduler(now = new Date()) {
             payload,
             expires_at: new Date(now.getTime() + ttl).toISOString(),
           },
-          { onConflict: 'dedupe_key', ignoreDuplicates: true },
+          { columns: ['dedupe_key'], ignore: true },
         );
-        check(error);
       };
       const routines = (await allRows(db, 'routines', profile.id)) as unknown as Routine[];
       for (const routine of routines.filter((r) => r.enabled)) {
@@ -63,15 +62,10 @@ export async function runScheduler(now = new Date()) {
             const due = new Date(now.getTime() - minute * 60000);
             if (localTime(due, profile.timezone) !== time) continue;
             const dueDate = dayKey(due, profile.timezone);
-            const { data: done, error: logError } = await db
-              .from('routine_logs')
-              .select('id')
-              .eq('user_id', profile.id)
-              .eq('routine_id', routine.id)
-              .eq('scheduled_date', dueDate)
-              .eq('scheduled_time', time)
-              .maybeSingle();
-            check(logError);
+            const [done] = await db.query(
+              'select id from hlyja.routine_logs where user_id=$1 and routine_id=$2 and scheduled_date=$3 and scheduled_time=$4',
+              [profile.id, routine.id, dueDate, time],
+            );
             if (!done)
               await enqueue('routine', `routine:${routine.id}:${dueDate}:${time}`, {
                 routine_id: routine.id,
@@ -96,72 +90,50 @@ export async function runScheduler(now = new Date()) {
           });
       }
       if (profile.support_enabled && profile.consent_at && emailReady()) {
-        const { data: moods, error: me } = await db
-          .from('mood_entries')
-          .select('*')
-          .eq('user_id', profile.id)
-          .gte(
-            'occurred_at',
+        const entries = await db.query<MoodEntry>(
+          'select * from hlyja.mood_entries where user_id=$1 and occurred_at>=$2 order by occurred_at',
+          [
+            profile.id,
             new Date(now.getTime() - (profile.support_days + 2) * 86400000).toISOString(),
-          )
-          .order('occurred_at');
-        check(me);
-        // Never evaluate an incomplete 1,000-row window: fetch all history if necessary.
-        const entries = (
-          moods?.length === 1000 ? await allRows(db, 'mood_entries', profile.id) : (moods ?? [])
-        ) as MoodEntry[];
+          ],
+        );
         if (supportSignal(entries, profile.support_days, profile.timezone, now)) {
-          const { data: contacts, error: ce } = await db
-            .from('trusted_contacts')
-            .select('id')
-            .eq('user_id', profile.id)
-            .eq('enabled', true)
-            .not('verified_at', 'is', null);
-          check(ce);
+          const contacts = await db.query<{ id: string }>(
+            'select id from hlyja.trusted_contacts where user_id=$1 and enabled and verified_at is not null',
+            [profile.id],
+          );
           for (const contact of contacts ?? []) {
-            const { error: enqueueError } = await db.rpc('enqueue_support_job', {
-              owner_id: profile.id,
-              recipient_id: contact.id,
-              job_key: `support:${contact.id}:${date}`,
-            });
-            check(enqueueError);
+            await db.query('select hlyja.enqueue_support_job($1,$2,$3)', [
+              profile.id,
+              contact.id,
+              `support:${contact.id}:${date}`,
+            ]);
           }
         }
       }
     }
     if (profiles.length < 200) break;
   }
-  const { data: jobs, error: claimError } = await db.rpc('claim_notification_jobs', {
-    batch_size: 50,
-  });
-  check(claimError);
+  const jobs = await db.query<Job>('select * from hlyja.claim_notification_jobs($1)', [50]);
   for (const job of (jobs ?? []) as Job[]) {
     try {
       const cancel = async () => {
-        const { error } = await db
-          .from('notification_jobs')
-          .update({ status: 'cancelled' })
-          .eq('id', job.id);
-        check(error);
+        await db.query("update hlyja.notification_jobs set status='cancelled' where id=$1", [
+          job.id,
+        ]);
       };
-      const { data: profile, error: pe } = await db
-        .from('profiles')
-        .select('*')
-        .eq('id', job.user_id)
-        .maybeSingle();
-      check(pe);
+      const [profile] = await db.query<Profile>('select * from hlyja.profiles where id=$1', [
+        job.user_id,
+      ]);
       if (!profile) {
         await cancel();
         continue;
       }
       if (job.kind === 'support') {
-        const { data: contact, error: ce } = await db
-          .from('trusted_contacts')
-          .select('*')
-          .eq('id', job.contact_id)
-          .eq('user_id', job.user_id)
-          .maybeSingle();
-        check(ce);
+        const [contact] = await db.query<Contact>(
+          'select * from hlyja.trusted_contacts where id=$1 and user_id=$2',
+          [job.contact_id, job.user_id],
+        );
         if (
           !profile.support_enabled ||
           !profile.consent_at ||
@@ -177,24 +149,22 @@ export async function runScheduler(now = new Date()) {
           continue;
         }
         const token = randomBytes(32).toString('hex');
-        const { error: te } = await db.from('contact_tokens').insert({
+        await insert(db, 'contact_tokens', {
           contact_id: contact.id,
           token_hash: createHash('sha256').update(token).digest('hex'),
           purpose: 'revoke',
           expires_at: new Date(now.getTime() + 365 * 86400000).toISOString(),
         });
-        check(te);
         // Persist exact mail text before delivery: retries must use the same provider idempotency key AND body.
         const original = job.payload.mail_text;
         const text =
           original ??
           `${profile.name} hefur heimilað Hlýju að biðja þig um að hafa samband. Gæti hentað að senda hlý skilaboð eða bjóða upp á samtal?\n\nÞetta eru sjálfvirk skilaboð samkvæmt stillingum viðkomandi, ekki greining eða neyðarmat. Engin ábyrgð á eftirliti fylgir þeim.\n\nHætta að fá slíkar tilkynningar:\n${process.env.NEXT_PUBLIC_APP_URL}/stadfesta?token=${token}&action=revoke`;
         if (!original) {
-          const { error } = await db
-            .from('notification_jobs')
-            .update({ payload: { ...job.payload, mail_text: text } })
-            .eq('id', job.id);
-          check(error);
+          await db.query('update hlyja.notification_jobs set payload=$1::jsonb where id=$2', [
+            JSON.stringify({ ...job.payload, mail_text: text }),
+            job.id,
+          ]);
         }
         await sendEmail(
           contact.email,
@@ -205,22 +175,14 @@ export async function runScheduler(now = new Date()) {
       } else {
         let reminderKind: ReminderKind = 'appointment';
         if (job.kind === 'routine') {
-          const { data: r, error: re } = await db
-            .from('routines')
-            .select('*')
-            .eq('id', job.payload.routine_id)
-            .eq('user_id', job.user_id)
-            .maybeSingle();
-          check(re);
-          const { data: l, error: le } = await db
-            .from('routine_logs')
-            .select('id')
-            .eq('user_id', job.user_id)
-            .eq('routine_id', job.payload.routine_id)
-            .eq('scheduled_date', job.payload.date)
-            .eq('scheduled_time', job.payload.time)
-            .maybeSingle();
-          check(le);
+          const [r] = await db.query<Routine>(
+            'select * from hlyja.routines where id=$1 and user_id=$2',
+            [job.payload.routine_id, job.user_id],
+          );
+          const [l] = await db.query(
+            'select id from hlyja.routine_logs where user_id=$1 and routine_id=$2 and scheduled_date=$3 and scheduled_time=$4',
+            [job.user_id, job.payload.routine_id, job.payload.date, job.payload.time],
+          );
           if (!r?.enabled || !r.times.includes(job.payload.time) || l) {
             await cancel();
             continue;
@@ -228,13 +190,10 @@ export async function runScheduler(now = new Date()) {
           reminderKind = r.kind;
         }
         if (job.kind === 'appointment') {
-          const { data: a, error: ae } = await db
-            .from('appointments')
-            .select('starts_at')
-            .eq('id', job.payload.appointment_id)
-            .eq('user_id', job.user_id)
-            .maybeSingle();
-          check(ae);
+          const [a] = await db.query<Appointment>(
+            'select starts_at from hlyja.appointments where id=$1 and user_id=$2',
+            [job.payload.appointment_id, job.user_id],
+          );
           if (!a || new Date(a.starts_at) <= now) {
             await cancel();
             continue;
@@ -251,11 +210,10 @@ export async function runScheduler(now = new Date()) {
           process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
           process.env.VAPID_PRIVATE_KEY,
         );
-        const { data: subscriptions, error: se } = await db
-          .from('push_subscriptions')
-          .select('*')
-          .eq('user_id', job.user_id);
-        check(se);
+        const subscriptions = await db.query<{ id: string; subscription: unknown }>(
+          'select id,subscription from hlyja.push_subscriptions where user_id=$1',
+          [job.user_id],
+        );
         if (!subscriptions?.length) {
           await cancel();
           continue;
@@ -277,8 +235,7 @@ export async function runScheduler(now = new Date()) {
           } catch (e) {
             const status = (e as { statusCode?: number }).statusCode;
             if (status === 404 || status === 410) {
-              const { error } = await db.from('push_subscriptions').delete().eq('id', row.id);
-              check(error);
+              await db.query('delete from hlyja.push_subscriptions where id=$1', [row.id]);
             } else throw e;
           }
         }
@@ -287,29 +244,25 @@ export async function runScheduler(now = new Date()) {
           continue;
         }
       }
-      const { error } = await db
-        .from('notification_jobs')
-        .update({ status: 'sent', sent_at: new Date().toISOString() })
-        .eq('id', job.id);
-      check(error);
+      await db.query("update hlyja.notification_jobs set status='sent',sent_at=$1 where id=$2", [
+        new Date().toISOString(),
+        job.id,
+      ]);
       delivered++;
     } catch {
       failed++;
-      const { error } = await db
-        .from('notification_jobs')
-        .update({
-          status: job.attempts >= 5 ? 'failed' : 'pending',
-          due_at: new Date(now.getTime() + Math.min(60, 2 ** job.attempts) * 60000).toISOString(),
-          locked_at: null,
-        })
-        .eq('id', job.id);
-      check(error);
+      await db.query(
+        'update hlyja.notification_jobs set status=$1,due_at=$2,locked_at=null where id=$3',
+        [
+          job.attempts >= 5 ? 'failed' : 'pending',
+          new Date(now.getTime() + Math.min(60, 2 ** job.attempts) * 60000).toISOString(),
+          job.id,
+        ],
+      );
     }
   }
-  const { error: cleanup } = await db
-    .from('rate_limits')
-    .delete()
-    .lt('expires_at', new Date(now.getTime() - 86400000).toISOString());
-  check(cleanup);
+  await db.query('delete from hlyja.rate_limits where expires_at<$1', [
+    new Date(now.getTime() - 86400000).toISOString(),
+  ]);
   return { users, delivered, failed };
 }

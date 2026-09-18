@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, ShieldCheck, Heart, Leaf, ChartNoAxesCombined, Bell } from 'lucide-react';
 import { Brand, Face } from '@/components/ui';
-import { configured } from '@/lib/supabase/server';
+import { configured } from '@/lib/neon/auth';
 export default async function Landing({
   searchParams,
 }: {

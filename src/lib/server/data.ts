@@ -1,58 +1,26 @@
 import 'server-only';
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { AppData } from '@/lib/domain/types';
-import { check } from './http';
-// Supabase defaults to 1,000 rows. Page explicitly so history and exports are complete.
-export async function allRows(db: SupabaseClient, table: string, userId: string, columns = '*') {
-  const rows: Record<string, unknown>[] = [];
-  const asOf = new Date().toISOString();
-  let cursor: string | undefined;
-  for (;;) {
-    let query = db
-      .from(table)
-      .select(columns)
-      .eq('user_id', userId)
-      .lte('created_at', asOf)
-      .order('id')
-      .limit(1000);
-    if (cursor) query = query.gt('id', cursor);
-    const { data, error } = await query;
-    check(error);
-    const batch = (data ?? []) as unknown as Record<string, unknown>[];
-    rows.push(...batch);
-    if (batch.length < 1000) break;
-    cursor = String(batch[batch.length - 1].id);
-  }
-  return rows;
+import type { Database } from '@/lib/neon/database';
+import type { AppData, Profile } from '@/lib/domain/types';
+const tables = [
+  'mood_entries',
+  'wellbeing_entries',
+  'routines',
+  'routine_logs',
+  'appointments',
+  'trusted_contacts',
+  'notification_jobs',
+];
+export async function allRows(db: Database, table: string, userId: string) {
+  if (!tables.includes(table)) throw new Error('Invalid table');
+  const columns = table === 'notification_jobs' ? 'id,user_id,kind,status,created_at,sent_at' : '*';
+  // HTTP SQL has no PostgREST row cap: one snapshot returns complete history.
+  return db.query(`select ${columns} from hlyja.${table} where user_id=$1 order by id`, [userId]);
 }
-export async function loadData(db: SupabaseClient, userId: string): Promise<AppData> {
-  const { data: profile, error } = await db
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .maybeSingle();
-  check(error);
-  const tables = [
-    'mood_entries',
-    'wellbeing_entries',
-    'routines',
-    'routine_logs',
-    'appointments',
-    'trusted_contacts',
-    'notification_jobs',
-  ];
-  const values = await Promise.all(
-    tables.map((table) =>
-      allRows(
-        db,
-        table,
-        userId,
-        table === 'notification_jobs' ? 'id,user_id,kind,status,created_at,sent_at' : '*',
-      ),
-    ),
-  );
+export async function loadData(db: Database, userId: string): Promise<AppData> {
+  const [profile] = await db.query<Profile>('select * from hlyja.profiles where id=$1', [userId]);
+  const values = await Promise.all(tables.map((table) => allRows(db, table, userId)));
   return {
-    profile,
+    profile: profile ?? null,
     moods: values[0],
     wellbeing: values[1],
     routines: values[2],

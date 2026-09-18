@@ -25,7 +25,7 @@ Opnaðu `http://localhost:3000/demo` fyrir gagnvirkt sýnishorn með tilbúnum f
 | Hluti            | Virkni                                                                                                        |
 | ---------------- | ------------------------------------------------------------------------------------------------------------- |
 | Íslenskt viðmót  | Síma- og tölvuviðmót, stór val fyrir líðan, róleg litun, lyklaborð og skert hreyfing                          |
-| Google + prófíll | OAuth/PKCE með Supabase, nafn, valkvætt fæðingarár, tímabelti, áhugamál og persónulegar hugmyndir             |
+| Google + prófíll | Google OAuth með Neon Auth, nafn, valkvætt fæðingarár, tímabelti, áhugamál og persónulegar hugmyndir          |
 | Skapskráning     | Margar sjálfstæðar færslur á dag; líðan 1–5, orka, tilfinningar, valkvæður texti og tími                      |
 | Yfirlit          | Dagur/vika/mánuður, meðaltöl, dreifing og allar einstakar færslur                                             |
 | Hversdagurinn    | Handvirk skráning á vatni, svefni, hreyfingu og skrefum                                                       |
@@ -44,14 +44,14 @@ Skapsvalið er aðalatriði forsíðunnar, með stórum snertiflötum í síma. 
 
 ## Tæknigrunnur
 
-Next.js App Router · React · TypeScript · Supabase PostgreSQL/Auth · Zod · Web Push · Resend. Enginn greiningar- eða auglýsingarekjakóði. Engin LLM-þjónusta fær notendagögn; persónulegar hugmyndir eru valdar með einfaldri, gagnsærri rökfræði.
+Next.js App Router · React · TypeScript · Neon PostgreSQL / Managed Better Auth · Zod · Web Push · Resend. Enginn greiningar- eða auglýsingarekjakóði. Engin LLM-þjónusta fær notendagögn; persónulegar hugmyndir eru valdar með einfaldri, gagnsærri rökfræði.
 
 ```text
 src/app/                 Síður og sannreyndar API-leiðir
 src/components/          Íslenskt viðmót, eyðublöð og biðgeymslusamstilling
 src/lib/domain/          Týpur, sannprófun, dagsetningar, stuðningsregla og útflutningur
 src/lib/server/          Aðgangur, tölvupóstur, síðuð gagnasókn og tilkynningavinnsla
-supabase/migrations/     Gagnagrunnur, reglur, RLS og RPC-aðgerðir
+db/migrations/           Neon-gagnagrunnur, reglur, RLS og SQL-aðgerðir
 tests/                   Eininga-, gagnagrunns- og vafrapróf
 docs/                    Uppsetning, arkitektúr, rekstur og áframhald
 ```
@@ -65,7 +65,7 @@ npx playwright install chromium webkit
 npm run test:e2e
 ```
 
-CI keyrir án raunverulegra heilsugagna eða framleiðslulykla. Google/Resend/Web Push þurfa viðbótarprófun gegn stilltu prófunarumhverfi áður en farið er í notkun. RLS-prófin keyra sama migration í innbyggðri PostgreSQL-vél; staðfesta þarf einnig Supabase-uppsetninguna sjálfa.
+CI keyrir án raunverulegra heilsugagna eða framleiðslulykla. Google/Resend/Web Push þurfa viðbótarprófun gegn stilltu prófunarumhverfi áður en farið er í notkun. RLS-prófin keyra sama migration í innbyggðri PostgreSQL-vél; staðfesta þarf einnig Neon-uppsetninguna sjálfa.
 
 ## Mikilvæg mörk
 
@@ -78,7 +78,7 @@ CI keyrir án raunverulegra heilsugagna eða framleiðslulykla. Google/Resend/We
 
 ## Gögn og öryggi
 
-GitHub geymir aðeins kóða, prófunargögn og leiðbeiningar. **Aldrei** setja raunveruleg heilsugögn, `.env.local`, Supabase service role eða skjáskot raunverulegra notenda í þetta opinbera repository. Ekki hafa heilsugögn í GitHub Issues.
+GitHub geymir aðeins kóða, prófunargögn og leiðbeiningar. **Aldrei** setja raunveruleg heilsugögn, `.env.local`, gagnagrunnstengislóðir eða Auth cookie secret eða skjáskot raunverulegra notenda í þetta opinbera repository. Ekki hafa heilsugögn í GitHub Issues.
 
 [Arkitektúr og ákvarðanir](docs/ARKITEKTUR.md) · [Uppsetning](docs/UPPSETNING.md) · [Rekstur og gagnavarðveisla](docs/REKSTUR.md) · [Vegvísir](docs/VEGVISIR.md) · [Öryggismál](SECURITY.md)
 

@@ -6,34 +6,36 @@ Node.js 24 LTS er notað í CI. Node 22 er einnig leyft. Keyrðu `npm ci`, afrit
 
 `npm run typecheck` kallar beint á TypeScript 7 í `@typescript/native`, svo uppsetningarröð npm ráði ekki hvaða `tsc` keyrir. TypeScript 6-samhæfingarpakkinn veitir JavaScript API sem ESLint og Next.js þurfa enn. Báðar útgáfur eru settar upp með npm-alias samkvæmt [leiðbeiningum TypeScript](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0). Ekki skipta `typescript`-aliasinu beint yfir í útgáfu 7 fyrr en þessi verkfæri styðja nýja API-ið; það stöðvar gæðaprófanir.
 
-## 2. Supabase og gagnagrunnur
+## 2. Neon og gagnagrunnur
 
-1. Stofnaðu sérstakt Supabase-prófunarverkefni. Veldu viðeigandi evrópska staðsetningu og staðfestu vinnslusamning/varðveislu áður en raunveruleg heilsugögn eru skráð.
-2. Keyrðu SQL-skrárnar í `supabase/migrations/` í stafrófsröð í SQL Editor: fyrst `202609180001_initial.sql`, síðan `202609180002_personal_notifications.sql`. Ef grunnurinn er þegar uppsettur skaltu aðeins keyra nýju skrána, áður en nýja appútgáfan er sett í loftið. Að öðrum kosti: `supabase link --project-ref <verkefni>` og `supabase db push` með Supabase CLI.
-3. Settu Project URL og publishable key í `NEXT_PUBLIC_SUPABASE_URL` og `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
-4. Settu service role lykilinn í `SUPABASE_SERVICE_ROLE_KEY` **aðeins á vefþjóninum**. Hann þarf fyrir staðfestingar aðstandenda, sendingarmörk, scheduler og eyðingu notanda.
-5. Notaðu eigin prófunarreikninga. Staðfestu að reikningur A sjái ekki gögn B, einnig þegar beint er kallað á Supabase Data API.
+1. Tengdu Neon-verkefnið við Vercel. `DATABASE_URL` er aðeins á vefþjóni; enginn gagnagrunnslykill fer í vafrann. Notaðu eigin Neon-grein fyrir Preview og staðbundnar prófanir.
+2. Virkjaðu Neon Auth (Managed Better Auth) á sömu grein. SQL-líkanið vísar í `neon_auth."user"` og varðveitir aðskilnað notenda með PostgreSQL RLS.
+3. Settu beina tengislóð í `DATABASE_URL_UNPOOLED` (án `-pooler`) og keyrðu `npm run db:migrate`. Skrár í `db/migrations/` eru framkvæmdar í einni færslu með lás og SHA-256-samanburði. Mistök afturkalla alla keyrsluna. Migration keyrir aldrei sjálfkrafa við build.
+4. Settu Auth URL greinarinnar í `NEON_AUTH_BASE_URL`. Búðu til `NEON_AUTH_COOKIE_SECRET` með `openssl rand -hex 32`; geymdu í Vercel Secrets, ekki GitHub. Allar vélar sama deployment þurfa sama lykil.
+5. Prófaðu `node --env-file=.env.local scripts/verify-neon.mjs`. Þetta les aðeins fjölda raða fyrir tóman prófunareiganda og birtir engin notendagögn.
 
-Skráningar eru tengdar prófíl sem þarf að klára fyrst. Það er ekki tilbúinn notandi, fast netfang eða lykilorð í migration.
+`hlyja` schema geymir appgögn. `hlyja_user` hefur aðeins aðgang að eigin gögnum; `hlyja_worker` sér um afmarkaðar þjónustuaðgerðir. SQL-færslur nota bæði `SET LOCAL ROLE` og transaction-local notandaauðkenni, líka yfir pooled-tengingu. Settu aldrei gagnagrunnstengislóð í `NEXT_PUBLIC_*`.
+
+Gamlar Supabase-migrations eru varðveittar í `supabase/migrations/` sem saga, ekki keyrðar á Neon. Flutningur tenginga flytur **ekki** sjálfkrafa eldri notendur eða heilsugögn. Ef Supabase var þegar í notkun þarf sérstakt afrit, sannreynda vörpun notendaauðkenna og samanburð á öllum færslum áður en skipt er yfir. Ekki eyða gamla gagnagrunninum við þennan flutning.
 
 ## 3. Google-innskráning
 
-1. Í Google Cloud: stilltu OAuth consent screen og OAuth Client af gerðinni Web application. Skráðu raunverulegt appheiti, ábyrgðaraðila og persónuverndarslóð. Bættu við test users á meðan appið er í prófun.
-2. Authorized redirect URI er Supabase callback-slóð verkefnisins: `https://<project-ref>.supabase.co/auth/v1/callback`.
-3. Í Supabase Authentication → Sign In / Providers → Google: virkjaðu Google og settu Google Client ID og Client Secret þar. Google Client Secret fer ekki í Next.js eða GitHub.
-4. Í Supabase URL Configuration: Site URL er raunveruleg slóð Hlýju. Leyfðu nákvæmlega `<app-url>/auth/callback` og `http://localhost:3000/auth/callback` fyrir þróun. Forðastu víða wildcard-a í framleiðslu.
-5. Stilltu `NEXT_PUBLIC_APP_URL` á sama uppruna. Innskráning notar aðeins `openid email profile`; ekki er beðið um Gmail, Drive, Calendar eða heilsugögn frá Google.
-6. Prófaðu nýjan notanda, innskráningu aftur, útrunnið token, útskráningu og neitað OAuth-samþykki.
+1. Neon Auth → OAuth providers → Google. Sameiginlegir Google-lyklar Neons henta prófunum; stilltu eigin Google OAuth-forrit fyrir útgáfu með appheiti og persónuverndarslóð.
+2. Notaðu callback-slóðina sem Neon Console sýnir fyrir Google. Google Client Secret er geymdur hjá Neon, ekki í Next.js eða GitHub.
+3. Bættu nákvæmum uppruna appsins, t.d. `https://þitt-app.vercel.app`, við **Trusted domains** á réttri Neon-grein. `NEXT_PUBLIC_APP_URL` verður að vera sami uppruni. Ekki opna víð wildcard fyrir framleiðslu.
+4. Innskráning byrjar á `/auth/login`. Neon sér um Google OAuth og `/app` proxy skiptir OAuth-tákni fyrir session-cookie. API sækir ferska session með `disableCookieCache: 'true'` áður en gögn eru opnuð; útrunnin eða afturkölluð session er ekki samþykkt.
+5. Prófaðu nýjan notanda, endurinnskráningu, neitað Google-samþykki, afturköllun session og útskráningu í raunverulegum vafra.
+6. Prófaðu reikningseyðingu með eigin prófunarreikningi. Hún notar Neon Auth `deleteUser`; eyðing auth-notandans eyðir tengdum appgögnum með FK cascade. Ef Neon krefst ferskrar innskráningar eða viðbótarstaðfestingar sýnir appið villu og fullyrðir ekki að eyðingu sé lokið.
 
-Opinberar leiðbeiningar: [Supabase Google](https://supabase.com/docs/guides/auth/social-login/auth-google), [Supabase SSR](https://supabase.com/docs/guides/auth/server-side/creating-a-client).
+Opinberar leiðbeiningar: [Neon Auth fyrir Next.js](https://neon.com/docs/auth/quick-start/nextjs), [Neon Auth server SDK](https://neon.com/docs/auth/reference/nextjs/server).
 
-## 4. Vefhýsing
+## 4. Vercel
 
-Hægt er að nota Vercel eða Node-hýsingu sem styður Next.js App Router og server routes. Þetta er **ekki** static-export verkefni fyrir GitHub Pages.
+Repo `aron5109/gedheilsa`, Next.js preset, Node 24, build `npm run build`. Þetta er ekki static-export verkefni. Neon Marketplace tengingin útvegar gagnagrunnsbreytur, en athuga þarf Auth URL, cookie secret og app-slóð sérstaklega.
 
-Á Vercel: import `aron5109/gedheilsa`, Next.js preset, Node 24, build `npm run build`, og umhverfisbreytur úr `.env.example`. Hafðu sér Supabase-prófunarverkefni fyrir preview deployment. Stilltu endanlega slóð og OAuth allowlist áður en innskráning er prófuð. Breyting á `NEXT_PUBLIC_*` þarf nýtt build.
+Nauðsynlegar breytur fyrir innskráningu: `DATABASE_URL`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_COOKIE_SECRET`, `NEXT_PUBLIC_APP_URL`. Migration þarf einnig `DATABASE_URL_UNPOOLED`. Stilltu hverja breytu fyrir rétt umhverfi og endurútgefðu eftir breytingar. Preview á að nota sérstaka Neon-grein og samsvarandi Auth URL.
 
-Uppsetning á hýsingu er ekki framkvæmd með því einu að ýta kóðanum á GitHub. Verkefnið inniheldur ekki virka þjónustulykla.
+GitHub-tengingin getur útgefið kóðann sjálfkrafa, en útgáfa ein og sér staðfestir ekki gagnagrunn, Google-innskráningu eða tilkynningar. Óstillt innskráning birtir uppsetningarskilaboð og `/demo` helst aðgengilegt.
 
 ## 5. Tölvupóstur
 

@@ -1,10 +1,10 @@
-import { guard, json, failure, body, check, rateLimit, HttpError } from '@/lib/server/http';
+import { guard, json, failure, body, rateLimit, HttpError } from '@/lib/server/http';
 import { exportSchema } from '@/lib/domain/validation';
 import { allRows, loadData } from '@/lib/server/data';
 import { filterMoods } from '@/lib/domain/mood';
 import { moodCsv } from '@/lib/domain/export';
 import { sendEmail } from '@/lib/server/mail';
-import type { MoodEntry } from '@/lib/domain/types';
+import type { MoodEntry, Profile } from '@/lib/domain/types';
 export async function GET(request: Request) {
   try {
     const { db, user } = await guard(request);
@@ -21,12 +21,9 @@ export async function POST(request: Request) {
     if (!value.email || !value.consent || !value.request_id)
       throw new HttpError(400, 'Staðfestu netfang viðtakanda og samþykktu sendingu.');
     await rateLimit(user.id, 'export-email', 5);
-    const { data: p, error } = await db
-      .from('profiles')
-      .select('timezone,name')
-      .eq('id', user.id)
-      .single();
-    check(error);
+    const [p] = await db.query<Profile>('select timezone,name from hlyja.profiles where id=$1', [
+      user.id,
+    ]);
     if (!p) throw new HttpError(404, 'Prófíll fannst ekki.');
     const entries = (await allRows(db, 'mood_entries', user.id)) as unknown as MoodEntry[];
     const selected = filterMoods(entries, value.from, value.to, p.timezone);

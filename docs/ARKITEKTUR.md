@@ -2,7 +2,7 @@
 
 ## Heildarmynd
 
-Next.js sér um íslenskt viðmót og API. Google-innskráning fer um Supabase Auth með PKCE og server-cookie. API sannreynir notandann með `getUser()` og notar Supabase með réttindum þess notanda fyrir almenn gögn. PostgreSQL RLS einangrar gögn eftir `auth.uid()`; eigandaauðkenni kemur frá staðfestri innskráningu, ekki beiðninni.
+Next.js sér um íslenskt viðmót og API. Google-innskráning fer um Neon Auth (Managed Better Auth) og HTTP-only session-cookie. API sannreynir ferska session með `currentUser()` og notar Neon HTTP SQL með transaction-local hlutverki `hlyja_user`. PostgreSQL RLS einangrar gögn eftir `hlyja.current_user_id()`; eigandaauðkenni kemur frá staðfestri innskráningu, ekki beiðninni. `SET LOCAL ROLE`, `set_config(...,true)` og gagnabeiðnin eru í sömu transaction svo pooled-tengingar beri ekki auðkenni á milli notenda. Þjónustuaðgerðir nota afmarkað `hlyja_worker` hlutverk á vefþjóni. Schema-eigandi er ekki runtime-hlutverk fyrir gagnabeiðnir.
 
 Service role er aðeins notað fyrir afmarkaðar aðgerðir sem notandinn á ekki sjálfur að geta falsað: netfangsstaðfestingu, job-biðröð, sendingarmörk og lokun reiknings. Það er ekki flutt inn í client components.
 
@@ -41,7 +41,7 @@ Ekki er hægt að lofa afhendingu eða nákvæmum tíma. „Sent“ í stöðu �
 
 ## Útflutningur og samhæfni
 
-CSV: UTF-8 BOM, semíkomma, CRLF, allar valdar færslur, tímastimplar og vörn gegn töflureikniformúlum. Dagbókartexti er sjálfgefið undanskilinn. Allar síður gagnasafns eru sóttar svo 1.000 raða sjálfgefið hámark Supabase klippi ekki af sögu.
+CSV: UTF-8 BOM, semíkomma, CRLF, allar valdar færslur, tímastimplar og vörn gegn töflureikniformúlum. Dagbókartexti er sjálfgefið undanskilinn. Neon SQL hefur ekki 1.000 raða PostgREST-hámark; útflutningur sækir alla sögu eigandans.
 
 JSON: `schema_version`, útflutningstími, prófíll, mælingar, áminningar, staðfestingar, tímar, stuðningsaðilar og sýnileg job-staða. UI bætir ósendum biðfærslum við sem `pending_entries`. Þetta er gagnasafn til varðveislu/afhendingar, ekki enn almenn innflutningsaðgerð.
 

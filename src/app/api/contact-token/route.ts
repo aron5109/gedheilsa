@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
-import { adminClient } from '@/lib/supabase/server';
-import { json, failure, body, check, HttpError } from '@/lib/server/http';
+import { workerDatabase } from '@/lib/neon/database';
+import { json, failure, body, HttpError } from '@/lib/server/http';
 export async function POST(request: Request) {
   try {
     const expected = new URL(process.env.NEXT_PUBLIC_APP_URL ?? request.url).origin;
@@ -10,12 +10,12 @@ export async function POST(request: Request) {
       request,
       z.object({ token: z.string().regex(/^[a-f0-9]{64}$/), action: z.enum(['verify', 'revoke']) }),
     );
-    const { data, error } = await adminClient().rpc('consume_contact_token', {
-      hash: createHash('sha256').update(value.token).digest('hex'),
-      action: value.action,
-    });
-    check(error);
-    if (!data) throw new HttpError(400, 'Hlekkurinn er útrunninn eða hefur þegar verið notaður.');
+    const [result] = await workerDatabase().query<{ allowed: boolean }>(
+      'select hlyja.consume_contact_token($1,$2) as allowed',
+      [createHash('sha256').update(value.token).digest('hex'), value.action],
+    );
+    if (!result.allowed)
+      throw new HttpError(400, 'Hlekkurinn er útrunninn eða hefur þegar verið notaður.');
     return json({ ok: true });
   } catch (e) {
     return failure(e);

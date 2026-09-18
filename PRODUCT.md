@@ -20,7 +20,7 @@ Notandi getur haft litla orku eða verið truflaður í miðri skráningu. Ekki 
 
 ## Capabilities and Constraints
 
-Next.js, React og Supabase. Google OAuth, persónulegar Web Push-áminningar, samþykkt stuðningsboð, CSV/JSON og dagatalsútflutningur eru í kóðanum. Þjónustulykla og rekstraruppsetningu vantar fyrir raunverulega notkun. Apple/Samsung-skrefatengingar eru framtíðarverkefni. `/demo` notar tilbúin gögn og varðveitir ekki breytingar við endurhleðslu.
+Next.js, React og Neon. Google OAuth, persónulegar Web Push-áminningar, samþykkt stuðningsboð, CSV/JSON og dagatalsútflutningur eru í kóðanum. Þjónustulykla og rekstraruppsetningu vantar fyrir raunverulega notkun. Apple/Samsung-skrefatengingar eru framtíðarverkefni. `/demo` notar tilbúin gögn og varðveitir ekki breytingar við endurhleðslu.
 
 Óvistaður texti á að vera varinn við lokun glugga; hann er ekki sjálfkrafa geymdur á tækinu. Skráðar færslur nota UUID og staðfesta móttöku. Samþykki þarf fyrir biðgeymslu og deilingu. Hlýja er ekki sjúkdómsgreining, sjálfsvígsspá eða neyðareftirlit.
 
